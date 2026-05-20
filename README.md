@@ -18,13 +18,13 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 2026-05-19 T 
 2026-05-20 W 
 2026-05-21 R 
-2026-05-22 F 
+2026-05-22 F Have something respectably playable by EOD.
 2026-05-23 S 
-2026-05-24 U 
+2026-05-24 U Aim to be complete by EOD, plenty of time to decide what more it needs then.
 2026-05-25 M 
 2026-05-26 T 
 2026-05-27 W 
-2026-05-28 R 
+2026-05-28 R Ideally submit today. Keep the second weekend free for overflow if needed, and otherwise Bellacopia.
 2026-05-29 F 
 2026-05-30 S 
 2026-05-31 U Emergency wrap-up only. Finish and submit before EOD.
@@ -32,7 +32,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 
 ## TODO
 
-- [ ] Single screens, endless scrolling, or a mix?
+- [x] Single screens, endless scrolling, or a mix? ...single screens. Keep it simple.
 - [ ] Starter graphics.
 - [ ] Map and sprite loader.
 - [ ] Hero.

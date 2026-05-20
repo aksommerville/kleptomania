@@ -5,6 +5,9 @@ struct g g={0};
 void egg_client_quit(int status) {
 }
 
+/* Init.
+ */
+
 int egg_client_init() {
 
   int fbw=0,fbh=0;
@@ -13,15 +16,12 @@ int egg_client_init() {
     fprintf(stderr,"Framebuffer size mismatch! metadata=%dx%d header=%dx%d\n",fbw,fbh,FBW,FBH);
     return -1;
   }
-
-  g.romc=egg_rom_get(0,0);
-  if (!(g.rom=malloc(g.romc))) return -1;
-  egg_rom_get(g.rom,g.romc);
-  text_set_rom(g.rom,g.romc);
-
-  srand_auto();
+  
+  if (res_init()<0) return -1;
 
   //TODO
+  struct map *map=map_by_id(RID_map_start);
+  if (!map) return -1;
 
   return 0;
 }
@@ -29,9 +29,15 @@ int egg_client_init() {
 void egg_client_notify(int k,int v) {
 }
 
+/* Update.
+ */
+
 void egg_client_update(double elapsed) {
   //TODO
 }
+
+/* Render.
+ */
 
 void egg_client_render() {
   graf_reset(&g.graf);

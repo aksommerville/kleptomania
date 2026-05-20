@@ -10,14 +10,13 @@
 
 #define NS_sys_tilesize 16
 // Define (mapw,maph) if you're using fixed-size maps.
-//#define NS_sys_mapw 20
-//#define NS_sys_maph 11
-#define NS_sys_bgcolor 0x000000
+#define NS_sys_mapw 20
+#define NS_sys_maph 11
+#define NS_sys_bgcolor 0x78a0ab
 
 #define CMD_map_image     0x20 /* u16:imageid */
-// 'position' or 'neighbors' (or neither). Not both.
-//#define CMD_map_position  0x40 /* u8:long, u8:lat, u8:plane, u8:unused */
-//#define CMD_map_neighbors 0x60 /* u16:west, u16:east, u16:north, u16:south */
+#define CMD_map_position  0x40 /* s8:long, s8:lat, u16:unused */
+#define CMD_map_bgcolor   0x41 /* u24:rgb u8:unused */
 #define CMD_map_sprite    0x61 /* u16:position, u16:spriteid, u32:arg */
 #define CMD_map_door      0x62 /* u16:position, u16:mapid, u16:dstposition, u16:arg */
 
@@ -32,11 +31,15 @@
 
 #define NS_physics_vacant 0
 #define NS_physics_solid 1
+#define NS_physics_oneway 2
+#define NS_physics_hazard 3
 
 // Editor uses the comment after a 'sprtype' symbol as a prompt in the new-sprite modal.
 // Should match everything after 'spriteid' in the CMD_map_sprite args.
 #define NS_sprtype_dummy 0 /* (u32)0 */
+#define NS_sprtype_hero 1 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
-  _(dummy)
+  _(dummy) \
+  _(hero)
 
 #endif

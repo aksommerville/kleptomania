@@ -9,14 +9,28 @@
 #include "util/text/text.h"
 #include "egg_res_toc.h"
 #include "shared_symbols.h"
+#include "map.h"
 
 #define FBW 320
 #define FBH 176
 
 extern struct g {
+
+  // res.c
   void *rom;
   int romc;
+  struct rom_entry *resv;
+  int resc,resa;
+  struct map *mapv; // All maps by id.
+  int mapc,mapa;
+  struct map **planev; // LRTB, coords of first is (planex,planey). Nulls permitted.
+  int planex,planey,planew,planeh;
+  
   struct graf graf;
 } g;
+
+int res_init();
+int res_search(int tid,int rid);
+int res_get(void *dstpp,int tid,int rid);
 
 #endif

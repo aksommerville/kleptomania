@@ -1,3 +1,4 @@
 image image:sprites
-tile 0 0
+tile 0x10 0
 type (u16:sprtype)hero
+solid

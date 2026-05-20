@@ -22,7 +22,7 @@ int map_decode(struct map *map,const void *src,int srcc) {
   while (cmdlist_reader_next(&cmd,&reader)>0) {
     switch (cmd.opcode) {
       case CMD_map_image: map->imageid=(cmd.arg[0]<<8)|cmd.arg[1]; break;
-      case CMD_map_position: map->lat=(int8_t)cmd.arg[0]; map->lng=(int8_t)cmd.arg[1]; break;
+      case CMD_map_position: map->lng=(int8_t)cmd.arg[0]; map->lat=(int8_t)cmd.arg[1]; break;
       case CMD_map_bgcolor: map->bgcolor=(cmd.arg[0]<<24)|(cmd.arg[1]<<16)|(cmd.arg[2]<<8)|0xff; break;
     }
   }

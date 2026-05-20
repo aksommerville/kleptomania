@@ -14,12 +14,16 @@ int map_decode(struct map *map,const void *src,int srcc) {
   map->v=map->rov;
   map->cmd=mres.cmd;
   map->cmdc=mres.cmdc;
+  
+  map->bgcolor=(NS_sys_bgcolor<<8)|0xff;
+  
   struct cmdlist_reader reader={.v=map->cmd,.c=map->cmdc};
   struct cmdlist_entry cmd;
   while (cmdlist_reader_next(&cmd,&reader)>0) {
     switch (cmd.opcode) {
       case CMD_map_image: map->imageid=(cmd.arg[0]<<8)|cmd.arg[1]; break;
       case CMD_map_position: map->lat=(int8_t)cmd.arg[0]; map->lng=(int8_t)cmd.arg[1]; break;
+      case CMD_map_bgcolor: map->bgcolor=(cmd.arg[0]<<24)|(cmd.arg[1]<<16)|(cmd.arg[2]<<8)|0xff; break;
     }
   }
   return 0;
@@ -29,7 +33,6 @@ int map_decode(struct map *map,const void *src,int srcc) {
  */
  
 int maps_build_plane() {
-  fprintf(stderr,"%s mapc=%d\n",__func__,g.mapc);
   if (g.mapc<1) {
     fprintf(stderr,"No maps!\n");
     return -1;

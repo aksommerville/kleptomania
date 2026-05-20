@@ -19,9 +19,8 @@ int egg_client_init() {
   
   if (res_init()<0) return -1;
 
-  //TODO
-  struct map *map=map_by_id(RID_map_start);
-  if (!map) return -1;
+  //TODO Need a structured "load_scene" kind of function.
+  if (!(g.map=map_by_id(RID_map_start))) return -1;
 
   return 0;
 }
@@ -41,6 +40,7 @@ void egg_client_update(double elapsed) {
 
 void egg_client_render() {
   graf_reset(&g.graf);
-  //TODO
+  //TODO modals
+  render_game();
   graf_flush(&g.graf);
 }

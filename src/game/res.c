@@ -22,8 +22,55 @@ static int res_add_map(const struct rom_entry *res) {
 /* Receive tilesheet, pre-link.
  */
  
+static uint8_t *physicsv_require(int rid) {
+  if ((rid<1)||(rid>99)) return 0;
+  int p=rid-1;
+  if (p>=g.physicsc) {
+    int na=p+1;
+    if (na>g.physicsa) {
+      na=(na+16)&~15;
+      if (na>INT_MAX/256) return 0;
+      void *nv=realloc(g.physicsv,na*256);
+      if (!nv) return 0;
+      g.physicsv=nv;
+      g.physicsa=na;
+    }
+    memset(g.physicsv+g.physicsc*256,0,(p-g.physicsc+1)*256);
+    g.physicsc=p+1;
+  }
+  return g.physicsv+p*256;
+}
+ 
 static int res_add_tilesheet(const struct rom_entry *res) {
-  fprintf(stderr,"%s %d c=%d\n",__func__,res->rid,res->c);//TODO
+  uint8_t *dst=physicsv_require(res->rid);
+  if (!dst) return -1;
+  struct tilesheet_reader reader;
+  if (tilesheet_reader_init(&reader,res->v,res->c)<0) return -1;
+  struct tilesheet_entry entry;
+  while (tilesheet_reader_next(&entry,&reader)>0) {
+    if (entry.tableid==NS_tilesheet_physics) {
+      memcpy(dst+entry.tileid,entry.v,entry.c);
+    }
+  }
+  return 0;
+}
+
+/* With all maps and tilesheets loaded, set (physics) in each map.
+ */
+ 
+static const uint8_t physics_default[256]={0};
+
+static int res_acquire_physics() {
+  struct map *map=g.mapv;
+  int i=g.mapc;
+  for (;i-->0;map++) {
+    int p=map->imageid-1;
+    if ((p<0)||(p>=g.physicsc)) {
+      map->physics=physics_default;
+    } else {
+      map->physics=g.physicsv+p*256;
+    }
+  }
   return 0;
 }
 
@@ -84,6 +131,7 @@ int res_init() {
   
   /* Linkage. Any further processing which requires the entire set loaded.
    */
+  if (res_acquire_physics()<0) return -1;
   if (maps_build_plane()<0) return -1;
   
   return 0;

@@ -25,12 +25,20 @@ extern struct g {
   int mapc,mapa;
   struct map **planev; // LRTB, coords of first is (planex,planey). Nulls permitted.
   int planex,planey,planew,planeh;
+  uint8_t *physicsv; // 256*physicsc, indexed by (rid-1).
+  int physicsc,physicsa;
   
   struct graf graf;
+  
+  struct map *map;
 } g;
 
+// res.c
 int res_init();
 int res_search(int tid,int rid);
 int res_get(void *dstpp,int tid,int rid);
+
+// camera.c
+void render_game();
 
 #endif

@@ -9,8 +9,8 @@ struct map {
   int lat,lng; // -128..127
   int imageid;
   uint32_t bgcolor;
-  const void *rov;
-  const void *v; // Keeping separate in case we want mutable tiles. But I don't think we will.
+  const uint8_t *rov;
+  const uint8_t *v; // Keeping separate in case we want mutable tiles. But I don't think we will.
   const void *cmd;
   int cmdc;
   const uint8_t *physics;

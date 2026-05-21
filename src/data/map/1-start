@@ -13,3 +13,4 @@
 image image:bg
 sprite @2,9 sprite:hero (u32)0
 position 0 0 0 0
+sprite @8,2 sprite:box (u32)0

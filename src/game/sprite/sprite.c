@@ -51,6 +51,11 @@ struct sprite *sprite_new(
   sprite->res=res;
   sprite->resc=resc;
   sprite->layer=100;
+  sprite->solid=0;
+  sprite->hbl=-0.5;
+  sprite->hbr=0.5;
+  sprite->hbt=-0.5;
+  sprite->hbb=0.5;
   
   /* Assign per generic commands.
    */
@@ -63,10 +68,16 @@ struct sprite *sprite_new(
     struct cmdlist_entry cmd;
     while (cmdlist_reader_next(&cmd,&reader)>0) {
       switch (cmd.opcode) {
-        case CMD_sprite_solid: sprite->solid=1; break;
         case CMD_sprite_image: sprite->imageid=(cmd.arg[0]<<8)|cmd.arg[1]; break;
         case CMD_sprite_tile: sprite->tileid=cmd.arg[0]; sprite->xform=cmd.arg[1]; break;
         case CMD_sprite_layer: sprite->layer=(cmd.arg[0]<<8)|cmd.arg[1]; break;
+        case CMD_sprite_solid: {
+            sprite->solid=1;
+            sprite->hbl=((int8_t)cmd.arg[0])/(double)NS_sys_tilesize;
+            sprite->hbr=((int8_t)cmd.arg[1])/(double)NS_sys_tilesize;
+            sprite->hbt=((int8_t)cmd.arg[2])/(double)NS_sys_tilesize;
+            sprite->hbb=((int8_t)cmd.arg[3])/(double)NS_sys_tilesize;
+          } break;
       }
     }
   }

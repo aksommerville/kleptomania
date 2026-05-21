@@ -1,4 +1,4 @@
 image image:sprites
 tile 0x10 0
 type (u16:sprtype)hero
-solid
+solid -6 6 -16 8

@@ -21,6 +21,9 @@ struct sprite {
   const void *res; // The entire sprite resource we loaded from. OPTIONAL.
   int resc;
   int solid;
+  double hbl,hbr,hbt,hbb; // Hitbox relative to (x,y). (l,t) are normally negative. Maintain horizontal symmetry if you flop!
+  int seated;
+  double gravity;
 };
 
 /* Should be internal use only.
@@ -58,6 +61,8 @@ struct sprite_type {
   int (*init)(struct sprite *sprite);
   void (*update)(struct sprite *sprite,double elapsed);
   void (*render)(struct sprite *sprite,int dstx,int dsty); // Single tile if not implemented.
+  void (*landed)(struct sprite *sprite,double velocity); // Optional callback if you're requesting gravity.
+  void (*falling)(struct sprite *sprite); // ''
 };
 
 const struct sprite_type *sprite_type_by_id(int sprtype); // => null if unknown
@@ -74,7 +79,20 @@ struct sprite *get_hero();
  
 /* Physics.
  *************************************************************************/
- 
-//TODO
+
+/* If (sprite) is solid, correct collisions immediately.
+ * No other sprite will move.
+ * Sprite will only move in the direction of this vector, never backward.
+ * Returns nonzero if we move at all, or zero if fully blocked.
+ * Result undefined if both deltas are zero.
+ */
+int sprite_move(struct sprite *sprite,double dx,double dy);
+
+/* We offer complimentary gravity service to all paying customers!
+ * It works for non-solid sprites too, but you must define the hitbox, and we'll temporarily enable solid.
+ * (otherwise, gravity without solid doesn't make sense, it would fall forever).
+ * We own (gravity,seated). You can read but please don't write them. Initialize both to zero.
+ */
+void sprite_update_gravity(struct sprite *sprite,double elapsed);
 
 #endif

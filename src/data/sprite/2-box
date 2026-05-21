@@ -1,4 +1,4 @@
 image image:sprites
 tile 128 0
-solid
-type (u16:sprtype)dummy
+solid -8 8 -8 8
+type (u16:sprtype)brick

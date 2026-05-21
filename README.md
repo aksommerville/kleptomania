@@ -35,7 +35,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Single screens, endless scrolling, or a mix? ...single screens. Keep it simple.
 - [x] Starter graphics.
 - [x] Map and sprite loader.
-- [ ] General physics. I think we can do 1d impulse physics on rects as usual, nothing super fancy.
+- [x] General physics. I think we can do 1d impulse physics on rects as usual, nothing super fancy.
 - [ ] Hero.
 - - [ ] Walk.
 - - [ ] Jump.

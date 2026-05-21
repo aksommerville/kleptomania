@@ -133,7 +133,7 @@ void check_transitions() {
   if (!hero) return;
   int dx=0,dy=0;
   if (hero->x<0.0) dx=-1;
-  else if (hero->y<0.0) dy=-1;
+  else if (hero->y+hero->hbb<0.0) dy=-1; // Exception when going up: Must clear toes, not just center.
   else if (hero->x>=NS_sys_mapw) dx=1;
   else if (hero->y>=NS_sys_maph) dy=1;
   if (!dx&&!dy) return;

@@ -52,3 +52,11 @@ void egg_client_render() {
   render_game();
   graf_flush(&g.graf);
 }
+
+/* Audio.
+ */
+ 
+void kl_sound(int rid) {
+  //TODO Blackout?
+  egg_play_sound(rid,1.0,0.0);
+}

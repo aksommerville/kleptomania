@@ -141,3 +141,11 @@ void sprite_update_gravity(struct sprite *sprite,double elapsed) {
     }
   }
 }
+
+void sprite_force_null_gravity(struct sprite *sprite) {
+  sprite->gravity=0.0;
+  if (sprite->seated) {
+    sprite->seated=0;
+    if (sprite->type->falling) sprite->type->falling(sprite);
+  }
+}

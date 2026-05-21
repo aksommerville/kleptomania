@@ -37,21 +37,34 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Map and sprite loader.
 - [x] General physics. I think we can do 1d impulse physics on rects as usual, nothing super fancy.
 - [ ] Hero.
-- - [ ] Walk.
-- - [ ] Jump.
-- - [ ] Duck.
-- - [ ] Down-jump.
-- - [ ] Wall slide.
-- - [ ] Wall jump.
+- - [x] Walk.
+- - [x] Jump.
+- - [x] Duck.
+- - [x] Down-jump.
+- - [x] Wall slide.
+- - [x] Wall jump.
 - - [ ] Dash.
 - - [ ] Floor slide: Dash while ducking.
 - - [ ] Carry.
+- - [ ] Death: Respawn instantly wherever you entered the room.
+- [ ] Properer graphics.
 - [ ] Rest of environment.
 - - [ ] Solids.
 - - [ ] One-way platforms.
 - - [ ] Moving platforms.
 - - [ ] Hazards.
+- [x] Need some kind of mitigation against navigating up when the jump is about to crest; you fall right back down.
+- - We read nearest-neighbor for physics purposes, so actually there's an easy way to do this. Just always use a double-oneway around vertical neighbors.
+- - Just need one mitigation at OOB detect: When going up, only go if her feet have cleared the map, instead of center.
+- [ ] Dialogue. Try fully passive dialogue in word bubbles.
 - [ ] Things to find and deliver.
+- [ ] World map.
+- - Start outside, with ample room for villagers.
+- - Require a dash to get into the castle. A moat, perhaps?
+- - [ ] Optional challenge zone if you go straight up from the first castle room. Climb the bell tower!
+- - - Dash across the ceiling.
+- - - Climb wall with 1-meter protrusions.
+- - - Catch a wall with a 5-meter elevated gap, it's just barely possible.
 - [ ] Boss. He'll offer to trade his Thing for something you can collect outside. Watermelon?
 - [ ] Sound effects.
 - [ ] Music.

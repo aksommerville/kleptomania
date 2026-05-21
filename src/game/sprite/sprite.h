@@ -95,4 +95,9 @@ int sprite_move(struct sprite *sprite,double dx,double dy);
  */
 void sprite_update_gravity(struct sprite *sprite,double elapsed);
 
+/* Spam this while jumping, or gravity suspended for whatever reason.
+ * This may trigger (falling).
+ */
+void sprite_force_null_gravity(struct sprite *sprite);
+
 #endif

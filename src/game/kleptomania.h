@@ -56,6 +56,9 @@ extern struct g {
   
 } g;
 
+// main.c
+void kl_sound(int rid);
+
 // res.c
 int res_init();
 int res_search(int tid,int rid);

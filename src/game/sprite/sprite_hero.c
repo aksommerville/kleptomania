@@ -6,6 +6,8 @@
 #define JUMP_DECEL       60.0 /* m/s**2 */
 #define WALK_SPEED        7.0 /* m/s */
 #define WALLSLIDE_DIMINUATION 0.250
+#define COYOTE_TIME    0.100 /* Allow jumping so far into a fall. */
+#define PREBOUNCE_TIME 0.100 /* Allow jumping if triggered so close to landing. */
 
 struct sprite_hero {
   struct sprite hdr;
@@ -16,6 +18,8 @@ struct sprite_hero {
   double walk_animclock;
   int walk_animframe;
   double jump_velocity; // m/s, decreases during the jump.
+  double fall_clock;
+  double prebounce; // Sample of (fall_clock) when a jump was rejected due to unseated.
   
   // High-level state. What is actually happening.
   int ducking;
@@ -37,6 +41,7 @@ static void _hero_del(struct sprite *sprite) {
  */
  
 static int _hero_init(struct sprite *sprite) {
+  SPRITE->prebounce=-1.0;
   return 0;
 }
 
@@ -48,8 +53,13 @@ static void _hero_landed(struct sprite *sprite,double velocity) {
    * Initial collision, when you haven't actually fallen, is a bit under 1.
    * From 1 meter, 9-ish. From 2 meters, 13-ish, 3 and above, the full 15.
    */
-  //fprintf(stderr,"%s %.03f\n",__func__,velocity);
-  if (velocity<1.000) {
+  //fprintf(stderr,"%s vel=%.03f dur=%.03f\n",__func__,velocity,SPRITE->fall_clock);
+  double prebounce=SPRITE->fall_clock-SPRITE->prebounce;
+  if ((g.input&EGG_BTN_SOUTH)&&(prebounce>=0.0)&&(prebounce<PREBOUNCE_TIME)) {
+    // Prebounce jump. Triggered slightly before landing.
+    // We don't effect the jump itself, we just lie about the input state so our next update will see it as freshly pressed.
+    g.input&=~EGG_BTN_SOUTH;
+  } else if (velocity<1.000) {
     // Too small to warrant any feedback at all. We might have turned gravity back on when already seated.
   } else if (velocity<10.000) {
     // Covers up to 1-meter drops.
@@ -62,10 +72,13 @@ static void _hero_landed(struct sprite *sprite,double velocity) {
     kl_sound(RID_sound_land_major);
   }
   //TODO Dust clouds? Screen shake? New hero frames?
-  //TODO Early jump affordance.
+  SPRITE->fall_clock=0.0;
+  SPRITE->prebounce=-1.0;
 }
 
 static void _hero_falling(struct sprite *sprite) {
+  SPRITE->fall_clock=0.0;
+  SPRITE->prebounce=-1.0;
 }
 
 /* Update duck state.
@@ -75,7 +88,7 @@ static void hero_update_duck(struct sprite *sprite,double elapsed) {
   if (SPRITE->ducking) {
     if ((SPRITE->duck_clock-=elapsed)>0.0) {
       // Brief interval where you can't release the duck.
-    } else if (!(g.input&EGG_BTN_DOWN)) {
+    } else if (!(g.input&EGG_BTN_DOWN)||!sprite->seated) {
       SPRITE->ducking=0;
       kl_sound(RID_sound_unduck);
     }
@@ -120,6 +133,12 @@ static void hero_down_jump_maybe(struct sprite *sprite) {
  
 static void hero_update_jump(struct sprite *sprite,double elapsed) {
 
+  /* Fall ongoing?
+   */
+  if (!sprite->seated) {
+    SPRITE->fall_clock+=elapsed;
+  }
+
   /* Jump ongoing?
    */
   if (SPRITE->jumping) {
@@ -157,13 +176,23 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
    */
   if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) {
     if (SPRITE->wallsliding) {
+      SPRITE->fall_clock=0.0;
+      SPRITE->prebounce=-1.0;
       SPRITE->wallsliding=0;
       SPRITE->jumping=1;
       SPRITE->jump_velocity=WALLJUMP_INITIAL;
       kl_sound(RID_sound_walljump);
       return;
     }
-    if (!sprite->seated) return; // TODO Early jump affordance and coyote time.
+    if (!sprite->seated) {
+      if (SPRITE->fall_clock<COYOTE_TIME) {
+        // Coyote jump, let it thru.
+      } else {
+        // Record time in case it prebounces.
+        SPRITE->prebounce=SPRITE->fall_clock;
+        return;
+      }
+    }
     if (SPRITE->ducking) {
       hero_down_jump_maybe(sprite);
       return;
@@ -280,6 +309,11 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
     tileid+=0x01;
   } else if (SPRITE->wallsliding) {
     tileid+=0x04;
+  } else if (SPRITE->jumping) {
+    tileid+=0x05;
+    y+=2; // Tile is offset by 2 pixels.
+  } else if (!sprite->seated) {
+    tileid+=0x06;
   } else if (SPRITE->walking) {
     switch (SPRITE->walk_animframe) {
       case 1: tileid+=0x02; break;

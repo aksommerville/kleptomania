@@ -77,13 +77,14 @@ void camera_draw_txbits(int include_hero) {
  */
  
 static void render_game_FADE(double t) {
+  int dsty=(g.screenshake>0.0)?1:0;
   double blackness; // 0..1
   if (t<0.5) {
     graf_set_input(&g.graf,g.txbits);
-    graf_decal(&g.graf,0,0,0,0,FBW,FBH);
+    graf_decal(&g.graf,0,dsty,0,0,FBW,FBH);
     blackness=t*2.0;
   } else {
-    render_game_inner(0,0,1);
+    render_game_inner(0,dsty,1);
     blackness=(1.0-t)*2.0;
   }
   int alpha=(int)(blackness*255.0);
@@ -97,8 +98,9 @@ static void render_game_FADE(double t) {
  */
  
 static void render_game_PAN(double t,int dx,int dy) {
+  int extray=(g.screenshake>0.0)?1:0;
   int ox=(int)(-dx*FBW*t);
-  int oy=(int)(-dy*FBH*t);
+  int oy=(int)(-dy*FBH*t)+extray;
   int nx=ox+FBW*dx;
   int ny=oy+FBH*dy;
   graf_set_input(&g.graf,g.txbits);
@@ -149,6 +151,7 @@ void render_game() {
   
   /* Transition in progress?
    */
+  int dsty=(g.screenshake>0.0)?1:0;
   if (g.txclock>0.0) {
     double t=1.0-g.txclock/TRANSITION_TIME;
     if (t<0.0) t=0.0; else if (t>1.0) t=1.0;
@@ -158,10 +161,10 @@ void render_game() {
       case TRANSITION_PAN_RIGHT: render_game_PAN(t,1,0); break;
       case TRANSITION_PAN_UP: render_game_PAN(t,0,-1); break;
       case TRANSITION_PAN_DOWN: render_game_PAN(t,0,1); break;
-      default: render_game_inner(0,0,1); break;
+      default: render_game_inner(0,dsty,1); break;
     }
   } else {
-    render_game_inner(0,0,1);
+    render_game_inner(0,dsty,1);
   }
   
   //TODO overlay, anything independent of transition.

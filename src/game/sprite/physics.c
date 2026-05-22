@@ -77,6 +77,10 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
           if ((erow==row)&&(ecol==col)) tileid=*srcp;
           else tileid=g.map->v[erow*NS_sys_mapw+ecol];
           uint8_t physics=g.map->physics[tileid];
+          if ((physics==NS_physics_oneway)&&(row!=erow)) {
+            // Oneways on the edge, everything beyond them is vacant, not more oneways.
+            physics=NS_physics_vacant;
+          }
           if (physics==NS_physics_vacant) continue;
           if (physics==NS_physics_hazard) continue; // hazards are not our problem.
           if (physics==NS_physics_oneway) {

@@ -53,6 +53,7 @@ extern struct g {
   double txclock; // Counts down.
   int bgbits_dirty;
   int sortd;
+  double screenshake; // Counts down.
   
 } g;
 

@@ -38,6 +38,9 @@ void egg_client_update(double elapsed) {
   
   //TODO modals, global input triggers?
   
+  if (g.screenshake>0.0) {
+    g.screenshake-=elapsed;
+  }
   sprites_update(elapsed);
   if (g.txclock>0.0) g.txclock-=elapsed;
   check_transitions();

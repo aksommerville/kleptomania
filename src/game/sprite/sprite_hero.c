@@ -8,6 +8,8 @@
 #define WALLSLIDE_DIMINUATION 0.250
 #define COYOTE_TIME    0.100 /* Allow jumping so far into a fall. */
 #define PREBOUNCE_TIME 0.100 /* Allow jumping if triggered so close to landing. */
+#define FOOTFALL_TIME  0.120
+#define WALLSLIDE_TIME 0.110
 
 struct sprite_hero {
   struct sprite hdr;
@@ -20,6 +22,8 @@ struct sprite_hero {
   double jump_velocity; // m/s, decreases during the jump.
   double fall_clock;
   double prebounce; // Sample of (fall_clock) when a jump was rejected due to unseated.
+  double footfall_clock;
+  double wallslide_clock;
   
   // High-level state. What is actually happening.
   int ducking;
@@ -48,6 +52,12 @@ static int _hero_init(struct sprite *sprite) {
 /* Gravity events.
  */
  
+static void hero_make_landing_dust(struct sprite *sprite) {
+  double x=sprite->x;
+  double y=sprite->y+sprite->hbb;
+  struct sprite *dust=sprite_spawn(&sprite_type_dust,x,y,0,0);
+}
+ 
 static void _hero_landed(struct sprite *sprite,double velocity) {
   /* The lowest velocity I can get by jumping is just a hair over 6.
    * Initial collision, when you haven't actually fallen, is a bit under 1.
@@ -67,11 +77,15 @@ static void _hero_landed(struct sprite *sprite,double velocity) {
   } else if (velocity<15.000) {
     // 2-meter drops.
     kl_sound(RID_sound_land_middle);
+    hero_make_landing_dust(sprite);
   } else {
     // 3-meter or higher drops.
     kl_sound(RID_sound_land_major);
+    hero_make_landing_dust(sprite);
   }
-  //TODO Dust clouds? Screen shake? New hero frames?
+  if (SPRITE->fall_clock>=0.750) { // 750 is just enough to create it with a simple jump. At 800, you'd have to also drop one meter.
+    g.screenshake=0.100;
+  }
   SPRITE->fall_clock=0.0;
   SPRITE->prebounce=-1.0;
 }
@@ -90,7 +104,7 @@ static void hero_update_duck(struct sprite *sprite,double elapsed) {
       // Brief interval where you can't release the duck.
     } else if (!(g.input&EGG_BTN_DOWN)||!sprite->seated) {
       SPRITE->ducking=0;
-      kl_sound(RID_sound_unduck);
+      if (sprite->seated) kl_sound(RID_sound_unduck); // No unduck sound if downjumping.
     }
   } else {
     //TODO Any other state conditions restricting duck?
@@ -106,7 +120,11 @@ static void hero_update_duck(struct sprite *sprite,double elapsed) {
  */
  
 static void hero_update_dash(struct sprite *sprite,double elapsed) {
-  //TODO dash
+  
+  //TODO Dash in progress?
+  
+  if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+  }
 }
 
 /* Jump while ducking. Begin down-jump if we can, otherwise do nothing.
@@ -136,7 +154,11 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
   /* Fall ongoing?
    */
   if (!sprite->seated) {
-    SPRITE->fall_clock+=elapsed;
+    if (SPRITE->wallsliding) {
+      SPRITE->fall_clock=0.0;
+    } else {
+      SPRITE->fall_clock+=elapsed;
+    }
   }
 
   /* Jump ongoing?
@@ -167,6 +189,10 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
     double ypost=sprite->y;
     if ((ypost>ypre+0.100)&&!sprite->seated) {
       sprite->y=ypre+(ypost-ypre)*WALLSLIDE_DIMINUATION;
+    }
+    if ((SPRITE->wallslide_clock-=elapsed)<=0.0) {
+      SPRITE->wallslide_clock+=WALLSLIDE_TIME;
+      kl_sound(RID_sound_wallslide);
     }
   } else {
     sprite_update_gravity(sprite,elapsed);
@@ -210,6 +236,7 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
 
   /* Wall slide is guilty until proven innocent; see way below.
    */
+  int pvwallslide=SPRITE->wallsliding;
   SPRITE->wallsliding=0;
 
   /* Collect current input state.
@@ -235,6 +262,7 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
       //TODO Maybe schedule to pay out some additional velocity.
       SPRITE->walking=0;
     }
+    SPRITE->footfall_clock=0.0;
     return;
   }
   
@@ -242,6 +270,7 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
    * Reject depending on state.
    */
   if (!SPRITE->walking) {
+    SPRITE->footfall_clock=0.0;
     if (SPRITE->ducking) return;
     SPRITE->walking=1;
     SPRITE->walk_animclock=0.0;
@@ -254,17 +283,8 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
   if (SPRITE->ducking) {
     //TODO As with the plain indx release, I think we might want some payout.
     SPRITE->walking=0;
+    SPRITE->footfall_clock=0.0;
     return;
-  }
-  
-  /* Animate.
-   */
-  if ((SPRITE->walk_animclock-=elapsed)<=0.0) {
-    SPRITE->walk_animclock+=0.150;
-    if (++(SPRITE->walk_animframe)>=4) SPRITE->walk_animframe=0;
-    if (SPRITE->walk_animframe==1) {
-      kl_sound(RID_sound_footfall);
-    }
   }
   
   /* Move.
@@ -278,6 +298,23 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
   if (!moved&&!sprite->seated&&!SPRITE->jumping) {
     //TODO No wallslide while carrying (and therefore no walljump either).
     SPRITE->wallsliding=1;
+    if (!pvwallslide) SPRITE->wallslide_clock=0.200; // Delay the first tick.
+  }
+  
+  /* Animate.
+   */
+  if ((SPRITE->walk_animclock-=elapsed)<=0.0) {
+    SPRITE->walk_animclock+=0.150;
+    if (++(SPRITE->walk_animframe)>=4) SPRITE->walk_animframe=0;
+  }
+  
+  /* Sound effects periodically, if we're seated.
+   */
+  if (!moved||!sprite->seated) {
+    SPRITE->footfall_clock=0.0;
+  } else if ((SPRITE->footfall_clock-=elapsed)<=0.0) {
+    SPRITE->footfall_clock+=FOOTFALL_TIME;
+    kl_sound(RID_sound_footfall);
   }
 }
 

@@ -39,9 +39,11 @@
 #define NS_sprtype_dummy 0 /* (u32)0 */
 #define NS_sprtype_hero 1 /* (u32)0 */
 #define NS_sprtype_brick 2 /* (u32)0 */
+#define NS_sprtype_dust 3 /* (u32)0 ; vertical center at ground level. */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
-  _(brick)
+  _(brick) \
+  _(dust)
 
 #endif

@@ -34,16 +34,25 @@
 #define NS_physics_oneway 2
 #define NS_physics_hazard 3
 
+#define NS_treasure_gem 1
+#define NS_treasure_book 2
+#define NS_treasure_crown 3
+#define NS_treasure_avocado 4
+#define NS_treasure_violin 5
+#define NS_treasure_sock 6
+
 // Editor uses the comment after a 'sprtype' symbol as a prompt in the new-sprite modal.
 // Should match everything after 'spriteid' in the CMD_map_sprite args.
 #define NS_sprtype_dummy 0 /* (u32)0 */
 #define NS_sprtype_hero 1 /* (u32)0 */
 #define NS_sprtype_brick 2 /* (u32)0 */
-#define NS_sprtype_dust 3 /* (u32)0 ; vertical center at ground level. */
+#define NS_sprtype_dust 3 /* (u32)0 */
+#define NS_sprtype_treasure 4 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
   _(brick) \
-  _(dust)
+  _(dust) \
+  _(treasure)
 
 #endif

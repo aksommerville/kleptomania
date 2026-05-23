@@ -13,6 +13,7 @@
 #define DASH_TIME      0.150
 #define SHADOW_LIMIT 6
 #define SHADOW_TIME 0.250
+#define CARRY_BLACKOUT_TIME 0.500 /* Can't pick something up so close to having dropped it. */
 
 struct sprite_hero {
   struct sprite hdr;
@@ -30,6 +31,7 @@ struct sprite_hero {
   double dash_clock;
   int dash_charged;
   int dashdx,dashdy;
+  double carry_blackout;
   
   // High-level state. What is actually happening.
   int ducking;
@@ -37,6 +39,7 @@ struct sprite_hero {
   int jumping;
   int walking;
   int wallsliding;
+  int carrying; // 0 or NS_treasure_*
   
   double shadow_clock;
   struct shadow {
@@ -166,6 +169,47 @@ static void hero_add_shadow(struct sprite *sprite) {
   shadow->xform=sprite->xform;
 }
 
+/* Drop whatever we're carrying.
+ */
+ 
+static void hero_drop(struct sprite *sprite) {
+  if (!SPRITE->carrying) return;
+  
+  // Ensure we have some freedom in the facing direction, don't drop it deep into a wall.
+  double x0=sprite->x;
+  int moved=(
+    sprite_move(sprite,(sprite->xform&EGG_XFORM_XREV)?-0.5:0.5,0.0)&&
+    sprite_move(sprite,(sprite->xform&EGG_XFORM_XREV)?-0.75:0.75,0.0)
+  );
+  sprite->x=x0;
+  if (!moved) return;
+  
+  kl_sound(RID_sound_drop);
+  
+  int rid=0;
+  switch (SPRITE->carrying) {
+    case NS_treasure_gem: rid=RID_sprite_gem; break;
+    case NS_treasure_book: rid=RID_sprite_book; break;
+    case NS_treasure_crown: rid=RID_sprite_crown; break;
+    case NS_treasure_avocado: rid=RID_sprite_avocado; break;
+    case NS_treasure_violin: rid=RID_sprite_violin; break;
+    case NS_treasure_sock: rid=RID_sprite_sock; break;
+  }
+  if (rid) {
+    double x=sprite->x;
+    double y=sprite->y-(2.0/NS_sys_tilesize);
+    if (sprite->xform&EGG_XFORM_XREV) x-=1.000;
+    else x+=1.000;
+    struct sprite *treasure=sprite_spawn(0,x,y,rid,0);
+    if (treasure) {
+      treasure->xform=sprite->xform;
+    }
+  }
+  
+  SPRITE->carrying=0;
+  SPRITE->carry_blackout=CARRY_BLACKOUT_TIME;
+}
+
 /* Update dash.
  */
  
@@ -214,10 +258,11 @@ static void hero_update_dash(struct sprite *sprite,double elapsed) {
    * The new one cancels the old one.
    */
   if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
-    if (!SPRITE->dash_charged) {
+    if (SPRITE->carrying) {
+      hero_drop(sprite);
+    } else if (!SPRITE->dash_charged) {
       kl_sound(RID_sound_dash_reject);
     } else {
-      //TODO Floor slide, if ducking.
       kl_sound(RID_sound_dash);
       SPRITE->dashing=1;
       SPRITE->dash_charged=0;
@@ -427,8 +472,7 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
   
   /* If the move failed and we're falling, do the wall slide.
    */
-  if (!moved&&!sprite->seated&&!SPRITE->jumping) {
-    //TODO No wallslide while carrying (and therefore no walljump either).
+  if (!moved&&!sprite->seated&&!SPRITE->jumping&&!SPRITE->carrying) {
     SPRITE->wallsliding=1;
     if (!pvwallslide) SPRITE->wallslide_clock=0.200; // Delay the first tick.
   }
@@ -461,6 +505,7 @@ static void hero_check_hazards(struct sprite *sprite) {
  */
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
+  if (SPRITE->carry_blackout>0.0) SPRITE->carry_blackout-=elapsed;
   hero_update_duck(sprite,elapsed);
   hero_update_dash(sprite,elapsed);
   hero_update_jump(sprite,elapsed);
@@ -506,6 +551,7 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
     graf_set_tint(&g.graf,0xffffff00|alpha);
   }
   
+  // Main body.
   uint8_t tileid=sprite->tileid; // (sprite->tileid) is constant. We choose the real tile dynamically, right here.
   if (SPRITE->ducking) {
     tileid+=0x01;
@@ -524,6 +570,33 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
   }
   graf_tile(&g.graf,x,y,tileid,sprite->xform);
   graf_tile(&g.graf,x,y-NS_sys_tilesize,tileid-0x10,sprite->xform);
+  
+  // If we're carrying something, draw it, then an overlay for my forward arm.
+  if (SPRITE->carrying) {
+    uint8_t carrytileid=0;
+    switch (SPRITE->carrying) {
+      case NS_treasure_gem: carrytileid=0x90; break;
+      case NS_treasure_book: carrytileid=0x91; break;
+      case NS_treasure_crown: carrytileid=0x92; break;
+      case NS_treasure_avocado: carrytileid=0x93; break;
+      case NS_treasure_violin: carrytileid=0x94; break;
+      case NS_treasure_sock: carrytileid=0x95; break;
+    }
+    if (carrytileid) {
+      int cx=x;
+      if (sprite->xform&EGG_XFORM_XREV) cx-=11;
+      else cx+=11;
+      int cy=y-2;
+      if (SPRITE->jumping) cy-=2;
+      else if (SPRITE->ducking) cy+=4;
+      graf_tile(&g.graf,cx,cy,carrytileid,sprite->xform);
+    }
+    int overx=x;
+    if (sprite->xform&EGG_XFORM_XREV) overx-=4;
+    else overx+=4;
+    graf_tile(&g.graf,overx,y,tileid+0x20,sprite->xform);
+    graf_tile(&g.graf,overx,y-NS_sys_tilesize,tileid+0x10,sprite->xform);
+  }
   
   graf_set_tint(&g.graf,0);
 }
@@ -555,4 +628,17 @@ struct sprite *get_hero() {
     return sprite;
   }
   return 0;
+}
+
+/* Start carrying a treasure if we can.
+ */
+ 
+int sprite_hero_carry(struct sprite *sprite,int treasure) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  if (SPRITE->carrying) return 0; // One thing at a time.
+  if (SPRITE->carry_blackout>0.0) return 0; // Please hold.
+  if (SPRITE->dashing) return 0; // Stop dashing first.
+  kl_sound(RID_sound_pickup);
+  SPRITE->carrying=treasure;
+  return 1;
 }

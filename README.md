@@ -30,6 +30,24 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 2026-05-31 U Emergency wrap-up only. Finish and submit before EOD.
 2026-06-01 M Submissions close 13:00.
 
+## Layout and Narrative
+
+- Start with one villager.
+- After satisfying the one, more appear. Say 4?
+- After satisfying those, one more appears: Little girl with a missing sock.
+- When little girl appears, you also get the vampire's key. It's for carrying, like treasures.
+- Go to the vampire's inner sanctum. He tells you to bring a watermelon.
+- Fetch watermelon from outside. These have been available all along.
+- Trade watermelon for sock, return the sock, and you win!
+
+- Start outside. One screen right is the moat. Dash required to cross.
+- You can scale the castle from outside and see the bell, but can't reach anything this way.
+- Straight up from the first inner room to climb the bell tower.
+- Straight down from the first room to reach the inner sanctum.
+- Fill the world with optional challenges. Lollipops to collect.
+- - Bell tower
+- - Cloud city. Get there by scaling the tower from outside.
+
 ## TODO
 
 - [x] Single screens, endless scrolling, or a mix? ...single screens. Keep it simple.
@@ -45,12 +63,12 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Wall jump.
 - - [x] Dash.
 - - [x] Floor slide: Dash while ducking. ...There's a nice default, not sure we need anything else here.
-- - [ ] Carry.
+- - [x] Carry.
 - - [ ] Death: Respawn instantly wherever you entered the room.
 - [ ] Properer graphics.
 - [ ] Rest of environment.
-- - [ ] Solids.
-- - [ ] One-way platforms.
+- - [x] Solids.
+- - [x] One-way platforms.
 - - [ ] Moving platforms.
 - - [ ] Hazards.
 - [x] Need some kind of mitigation against navigating up when the jump is about to crest; you fall right back down.

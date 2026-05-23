@@ -12,3 +12,5 @@
 
 image image:bg
 position -1 0 0 *
+sprite @5,2 sprite:crown (u32)0
+sprite @10,9 sprite:violin (u32)0

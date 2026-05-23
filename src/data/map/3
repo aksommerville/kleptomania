@@ -12,3 +12,4 @@
 
 image image:bg
 position 1 0 0 *
+sprite @16,9 sprite:avocado (u32)0

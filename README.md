@@ -64,13 +64,13 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Dash.
 - - [x] Floor slide: Dash while ducking. ...There's a nice default, not sure we need anything else here.
 - - [x] Carry.
-- - [ ] Death: Respawn instantly wherever you entered the room.
+- - [x] Death: Respawn instantly wherever you entered the room.
 - [ ] Properer graphics.
 - [ ] Rest of environment.
 - - [x] Solids.
 - - [x] One-way platforms.
 - - [ ] Moving platforms.
-- - [ ] Hazards.
+- - [x] Hazards.
 - [x] Need some kind of mitigation against navigating up when the jump is about to crest; you fall right back down.
 - - We read nearest-neighbor for physics purposes, so actually there's an easy way to do this. Just always use a double-oneway around vertical neighbors.
 - - Just need one mitigation at OOB detect: When going up, only go if her feet have cleared the map, instead of center.

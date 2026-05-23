@@ -48,11 +48,13 @@
 #define NS_sprtype_brick 2 /* (u32)0 */
 #define NS_sprtype_dust 3 /* (u32)0 */
 #define NS_sprtype_treasure 4 /* (u32)0 */
+#define NS_sprtype_soulballs 5 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
   _(brick) \
   _(dust) \
-  _(treasure)
+  _(treasure) \
+  _(soulballs)
 
 #endif

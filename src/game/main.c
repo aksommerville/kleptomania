@@ -43,7 +43,7 @@ void egg_client_update(double elapsed) {
   }
   sprites_update(elapsed);
   if (g.txclock>0.0) g.txclock-=elapsed;
-  check_transitions();
+  check_transitions(elapsed);
 }
 
 /* Render.

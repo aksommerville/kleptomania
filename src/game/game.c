@@ -72,6 +72,7 @@ int game_load_map(int rid) {
    */
   g.map=map;
   g.bgbits_dirty=1;
+  g.deathtime=0.0;
   //TODO If we make volatile cells, copy (rov) over (v) now.
   
   /* Run map commands, in particular spawn sprites.
@@ -87,6 +88,9 @@ int game_load_map(int rid) {
             double y=cmd.arg[1]+0.5;
             int rid=(cmd.arg[2]<<8)|cmd.arg[3];
             uint32_t arg=(cmd.arg[4]<<24)|(cmd.arg[5]<<16)|(cmd.arg[6]<<8)|cmd.arg[7];
+            if ((rid==RID_sprite_hero)&&(g.safex>=0)&&(g.safey>=0)) {
+              break;
+            }
             if (!hero||(rid!=RID_sprite_hero)) {
               struct sprite *sprite=sprite_spawn(0,x,y,rid,arg);
               if (!sprite) {
@@ -129,9 +133,19 @@ int game_load_map(int rid) {
 /* Check for transitions.
  */
  
-void check_transitions() {
+void check_transitions(double elapsed) {
+
+  /* If there's no hero, pay out a timer and then create a new one.
+   */
   struct sprite *hero=get_hero();
-  if (!hero) return;
+  if (!hero) {
+    g.deathtime+=elapsed;
+    if (g.deathtime>=1.000) {
+      game_load_map(g.map->rid);
+    }
+    return;
+  }
+  
   int dx=0,dy=0;
   if (hero->x<0.0) dx=-1;
   else if (hero->y+hero->hbb<-1.0) dy=-1; // Exception when going up: Toes must clear the next row in.

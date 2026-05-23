@@ -45,6 +45,7 @@ extern struct g {
   int safex,safey; // Column and row where hero entered the current map. Will respawn here on death.
   int input,pvinput;
   int treasurev[TREASURE_LIMIT]; // Indexed by NS_treasure_*. Nonzero if this treasure has been delivered.
+  double deathtime; // Counts up after dying.
   
   // sprite.c
   struct sprite **spritev;
@@ -81,6 +82,6 @@ void camera_draw_txbits(int include_hero);
  */
 int game_reset();
 int game_load_map(int rid);
-void check_transitions();
+void check_transitions(double elapsed);
 
 #endif

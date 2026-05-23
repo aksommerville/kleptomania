@@ -43,8 +43,8 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Down-jump.
 - - [x] Wall slide.
 - - [x] Wall jump.
-- - [ ] Dash.
-- - [ ] Floor slide: Dash while ducking.
+- - [x] Dash.
+- - [x] Floor slide: Dash while ducking. ...There's a nice default, not sure we need anything else here.
 - - [ ] Carry.
 - - [ ] Death: Respawn instantly wherever you entered the room.
 - [ ] Properer graphics.

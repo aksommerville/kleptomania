@@ -10,6 +10,9 @@
 #define PREBOUNCE_TIME 0.100 /* Allow jumping if triggered so close to landing. */
 #define FOOTFALL_TIME  0.120
 #define WALLSLIDE_TIME 0.110
+#define DASH_TIME      0.150
+#define SHADOW_LIMIT 6
+#define SHADOW_TIME 0.250
 
 struct sprite_hero {
   struct sprite hdr;
@@ -24,6 +27,9 @@ struct sprite_hero {
   double prebounce; // Sample of (fall_clock) when a jump was rejected due to unseated.
   double footfall_clock;
   double wallslide_clock;
+  double dash_clock;
+  int dash_charged;
+  int dashdx,dashdy;
   
   // High-level state. What is actually happening.
   int ducking;
@@ -31,6 +37,15 @@ struct sprite_hero {
   int jumping;
   int walking;
   int wallsliding;
+  
+  double shadow_clock;
+  struct shadow {
+    double x,y;
+    double ttl;
+    int ducking;
+    uint8_t xform;
+  } shadowv[SHADOW_LIMIT];
+  int shadowc;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -46,7 +61,17 @@ static void _hero_del(struct sprite *sprite) {
  
 static int _hero_init(struct sprite *sprite) {
   SPRITE->prebounce=-1.0;
+  SPRITE->dash_charged=1;
   return 0;
+}
+
+/* Charge dash if not charged.
+ */
+ 
+static void hero_charge_dash(struct sprite *sprite) {
+  if (SPRITE->dash_charged) return;
+  SPRITE->dash_charged=1;
+  kl_sound(RID_sound_charge_dash);
 }
 
 /* Gravity events.
@@ -88,6 +113,7 @@ static void _hero_landed(struct sprite *sprite,double velocity) {
   }
   SPRITE->fall_clock=0.0;
   SPRITE->prebounce=-1.0;
+  hero_charge_dash(sprite);
 }
 
 static void _hero_falling(struct sprite *sprite) {
@@ -116,14 +142,113 @@ static void hero_update_duck(struct sprite *sprite,double elapsed) {
   }
 }
 
+/* Add a shadow to the list, if there's room.
+ */
+ 
+static void hero_add_shadow(struct sprite *sprite) {
+  
+  // First reap anything defunct.
+  int i=SPRITE->shadowc;
+  struct shadow *shadow=SPRITE->shadowv+i-1;
+  for (;i-->0;shadow--) {
+    if (shadow->ttl<=0.0) {
+      SPRITE->shadowc--;
+      memmove(shadow,shadow+1,sizeof(struct shadow)*(SPRITE->shadowc-i));
+    }
+  }
+  
+  if (SPRITE->shadowc>=SHADOW_LIMIT) return;
+  shadow=SPRITE->shadowv+SPRITE->shadowc++;
+  shadow->x=sprite->x;
+  shadow->y=sprite->y;
+  shadow->ttl=SHADOW_TIME;
+  shadow->ducking=SPRITE->ducking;
+  shadow->xform=sprite->xform;
+}
+
 /* Update dash.
  */
  
 static void hero_update_dash(struct sprite *sprite,double elapsed) {
+
+  /* Tick shadows and remove from the end only.
+   */
+  if (SPRITE->shadowc>0) {
+    struct shadow *shadow=SPRITE->shadowv;
+    int i=SPRITE->shadowc;
+    for (;i-->0;shadow++) {
+      shadow->ttl-=elapsed;
+    }
+    while (SPRITE->shadowc&&(SPRITE->shadowv[SPRITE->shadowc-1].ttl<=0.0)) SPRITE->shadowc--;
+  }
   
-  //TODO Dash in progress?
+  /* Dash in progress? Pay it out.
+   */
+  if (SPRITE->dashing) {
+    if ((SPRITE->shadow_clock-=elapsed)<=0.0) {
+      SPRITE->shadow_clock+=0.050;
+      hero_add_shadow(sprite);
+    }
+    if ((SPRITE->dash_clock-=elapsed)<=0.0) {
+      SPRITE->dashing=0;
+      if (sprite->seated) {
+        // Gravity is suspended during most dashes. Try nudging down a little, to see whether we need to recharge.
+        if (sprite_move(sprite,0.0,0.010)) {
+          // Not really seated.
+        } else {
+          hero_charge_dash(sprite);
+        }
+      }
+    } else {
+      double speed=20.0;
+      if (SPRITE->dashdx&&!sprite_move(sprite,speed*SPRITE->dashdx*elapsed,0.0)) {
+        hero_charge_dash(sprite);
+      }
+      if (SPRITE->dashdy&&!sprite_move(sprite,0.0,speed*SPRITE->dashdy*elapsed)) {
+        hero_charge_dash(sprite);
+      }
+    }
+  }
   
+  /* Start a new dash? You can do this even when a dash is currently paying out.
+   * The new one cancels the old one.
+   */
   if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+    if (!SPRITE->dash_charged) {
+      kl_sound(RID_sound_dash_reject);
+    } else {
+      //TODO Floor slide, if ducking.
+      kl_sound(RID_sound_dash);
+      SPRITE->dashing=1;
+      SPRITE->dash_charged=0;
+      SPRITE->dash_clock=DASH_TIME;
+      SPRITE->shadow_clock=0.0;
+      SPRITE->dashdx=SPRITE->dashdy=0;
+      switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+        case EGG_BTN_LEFT: SPRITE->dashdx=-1; break;
+        case EGG_BTN_RIGHT: SPRITE->dashdx=1; break;
+      }
+      switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
+        case EGG_BTN_UP: SPRITE->dashdy=-1; break;
+        case EGG_BTN_DOWN: SPRITE->dashdy=1; break;
+      }
+      if (!SPRITE->dashdx&&!SPRITE->dashdy) {
+        // Dash without dpad: Go horizontal in the direction we're facing.
+        if (sprite->xform&EGG_XFORM_XREV) {
+          SPRITE->dashdx=-1;
+        } else {
+          SPRITE->dashdx=1;
+        }
+      }
+      if (!SPRITE->dashdx&&(SPRITE->dashdy>0)&&sprite->seated) {
+        // Likewise, if we're only holding down, and already at the ground, call it a forward diagonal.
+        if (sprite->xform&EGG_XFORM_XREV) {
+          SPRITE->dashdx=-1;
+        } else {
+          SPRITE->dashdx=1;
+        }
+      }
+    }
   }
 }
 
@@ -174,7 +299,10 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
     // Proceed with jump.
     } else {
       sprite_force_null_gravity(sprite);
-      sprite_move(sprite,0.0,-SPRITE->jump_velocity*elapsed);
+      if (!sprite_move(sprite,0.0,-SPRITE->jump_velocity*elapsed)) {
+        // Hit the ceiling, get your dash back.
+        hero_charge_dash(sprite);
+      }
       return;
     }
   }
@@ -183,7 +311,9 @@ static void hero_update_jump(struct sprite *sprite,double elapsed) {
    * During a wallslide, capture the pre and post positions, then cheat it backward.
    * It's ok to force (y) in this case, since gravity will have confirmed a larger move was legal.
    */
-  if (SPRITE->wallsliding) {
+  if (SPRITE->dashing&&(SPRITE->dashdy<=0)) {
+    // Suspend gravity during dash, unless it's pointing down. Then the loss of gravity is apparent and weird.
+  } else if (SPRITE->wallsliding) {
     double ypre=sprite->y;
     sprite_update_gravity(sprite,elapsed);
     double ypost=sprite->y;
@@ -259,7 +389,6 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
    */
   if (!SPRITE->indx) {
     if (SPRITE->walking) {
-      //TODO Maybe schedule to pay out some additional velocity.
       SPRITE->walking=0;
     }
     SPRITE->footfall_clock=0.0;
@@ -278,20 +407,23 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
   }
   
   /* If we started ducking, abort the walk.
-   * TODO Maybe similar treatment when dashing.
    */
   if (SPRITE->ducking) {
-    //TODO As with the plain indx release, I think we might want some payout.
     SPRITE->walking=0;
     SPRITE->footfall_clock=0.0;
     return;
   }
   
   /* Move.
-   * TODO Should velocity ramp up?
    */
   double speed=WALK_SPEED;
   int moved=sprite_move(sprite,speed*SPRITE->indx*elapsed,0.0);
+  
+  /* Dash recharges if movement fails -- even horizontal movement.
+   */
+  if (!moved&&!SPRITE->dash_charged) {
+    hero_charge_dash(sprite);
+  }
   
   /* If the move failed and we're falling, do the wall slide.
    */
@@ -341,6 +473,39 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
  
 static void _hero_render(struct sprite *sprite,int x,int y) {
   graf_set_image(&g.graf,sprite->imageid);
+  
+  // Shadows, triggered by dashing.
+  if (SPRITE->shadowc>0) {
+    int expectx=(int)(sprite->x*NS_sys_tilesize);
+    int expecty=(int)(sprite->y*NS_sys_tilesize);
+    int dx=x-expectx;
+    int dy=y-expecty;
+    struct shadow *shadow=SPRITE->shadowv;
+    int i=SPRITE->shadowc;
+    for (;i-->0;shadow++) {
+      if (shadow->ttl<=0.0) continue;
+      int alpha=(int)((shadow->ttl*96.0)/SHADOW_TIME);
+      if (alpha<=0) continue;
+      if (alpha>0xff) alpha=0xff;
+      graf_set_alpha(&g.graf,alpha);
+      int shx=(int)(shadow->x*NS_sys_tilesize)+dx;
+      int shy=(int)(shadow->y*NS_sys_tilesize)+dy;
+      uint8_t tileid=sprite->tileid;
+      if (shadow->ducking) tileid+=0x01;
+      graf_tile(&g.graf,shx,shy,tileid,shadow->xform);
+      graf_tile(&g.graf,shx,shy-NS_sys_tilesize,tileid-0x10,shadow->xform);
+    }
+    graf_set_alpha(&g.graf,0xff);
+  }
+  
+  // When dashing, tint.
+  if (SPRITE->dashing) {
+    double t=SPRITE->dash_clock/DASH_TIME;
+    if (t<0.0) t=0.0; else if (t>1.0) t=1.0;
+    int alpha=0x40+(int)(0x80*t);
+    graf_set_tint(&g.graf,0xffffff00|alpha);
+  }
+  
   uint8_t tileid=sprite->tileid; // (sprite->tileid) is constant. We choose the real tile dynamically, right here.
   if (SPRITE->ducking) {
     tileid+=0x01;
@@ -359,6 +524,8 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
   }
   graf_tile(&g.graf,x,y,tileid,sprite->xform);
   graf_tile(&g.graf,x,y-NS_sys_tilesize,tileid-0x10,sprite->xform);
+  
+  graf_set_tint(&g.graf,0);
 }
 
 /* Type definition.

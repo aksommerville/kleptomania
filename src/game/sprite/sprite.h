@@ -77,6 +77,7 @@ FOR_EACH_SPRTYPE
  
 struct sprite *get_hero();
 int sprite_hero_carry(struct sprite *sprite,int treasure); // >0 if accepted.
+int sprite_hero_carrying(const struct sprite *sprite);
  
 /* Physics.
  *************************************************************************/

@@ -90,8 +90,9 @@ int game_load_map(int rid) {
             if (!hero||(rid!=RID_sprite_hero)) {
               struct sprite *sprite=sprite_spawn(0,x,y,rid,arg);
               if (!sprite) {
-                fprintf(stderr,"Failed to spawn sprite:%d on map:%d\n",rid,g.map->rid);
-                return -1;
+                // It's perfectly OK for sprites to refuse to spawn (eg a treasure, if it's already collected).
+                //fprintf(stderr,"Failed to spawn sprite:%d on map:%d\n",rid,g.map->rid);
+                continue;
               }
               if (rid==RID_sprite_hero) hero=sprite;
             }

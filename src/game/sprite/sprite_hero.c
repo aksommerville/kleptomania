@@ -185,9 +185,11 @@ static void hero_drop(struct sprite *sprite) {
   if (!moved) return;
   
   kl_sound(RID_sound_drop);
+  int treasure=SPRITE->carrying;
+  SPRITE->carrying=0;
   
   int rid=0;
-  switch (SPRITE->carrying) {
+  switch (treasure) {
     case NS_treasure_gem: rid=RID_sprite_gem; break;
     case NS_treasure_book: rid=RID_sprite_book; break;
     case NS_treasure_crown: rid=RID_sprite_crown; break;
@@ -206,7 +208,6 @@ static void hero_drop(struct sprite *sprite) {
     }
   }
   
-  SPRITE->carrying=0;
   SPRITE->carry_blackout=CARRY_BLACKOUT_TIME;
 }
 
@@ -641,4 +642,9 @@ int sprite_hero_carry(struct sprite *sprite,int treasure) {
   kl_sound(RID_sound_pickup);
   SPRITE->carrying=treasure;
   return 1;
+}
+
+int sprite_hero_carrying(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  return SPRITE->carrying;
 }

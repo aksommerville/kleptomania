@@ -23,6 +23,8 @@
 #define TRANSITION_PAN_UP     4
 #define TRANSITION_PAN_DOWN   5
 
+#define TREASURE_LIMIT 7
+
 extern struct g {
 
   // res.c
@@ -42,6 +44,7 @@ extern struct g {
   struct map *map; // REQUIRED
   int safex,safey; // Column and row where hero entered the current map. Will respawn here on death.
   int input,pvinput;
+  int treasurev[TREASURE_LIMIT]; // Indexed by NS_treasure_*. Nonzero if this treasure has been delivered.
   
   // sprite.c
   struct sprite **spritev;

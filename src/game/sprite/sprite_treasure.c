@@ -20,6 +20,12 @@ static int _treasure_init(struct sprite *sprite) {
         return -1;
       }
   }
+  
+  // Reject if this treasure is already finished, or if the hero is carrying it.
+  if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
+  struct sprite *hero=get_hero();
+  if (sprite_hero_carrying(hero)==SPRITE->treasure) return -1;
+  
   return 0;
 }
 

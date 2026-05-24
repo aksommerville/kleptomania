@@ -1,0 +1,4 @@
+image image:sprites
+tile 187 0
+type (u16:sprtype)lock
+solid -8 24 -24 8

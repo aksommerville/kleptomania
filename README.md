@@ -86,6 +86,6 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - - Climb wall with 1-meter protrusions.
 - - - Catch a wall with a 5-meter elevated gap, it's just barely possible.
 - [ ] Boss. He'll offer to trade his Thing for something you can collect outside. Watermelon?
-- [ ] Sound effects.
+- [x] Sound effects.
 - [ ] Music.
 - [ ] Itch page.

@@ -23,7 +23,7 @@
 #define TRANSITION_PAN_UP     4
 #define TRANSITION_PAN_DOWN   5
 
-#define TREASURE_LIMIT 7
+#define TREASURE_LIMIT 8
 
 extern struct g {
 
@@ -83,5 +83,10 @@ void camera_draw_txbits(int include_hero);
 int game_reset();
 int game_load_map(int rid);
 void check_transitions(double elapsed);
+int spawn_villagers(); // Normally happens during game_load_map(), but you can poke it manually when everybody's gone.
+
+int treasure_for_tileid(uint8_t tileid);
+uint8_t tileid_for_treasure(int treasure);
+int spriteid_for_treasure(int treasure);
 
 #endif

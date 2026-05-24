@@ -1,0 +1,5 @@
+image image:sprites
+tile 163 0
+type (u16:sprtype)villager
+treasure (u16:treasure)book
+layer (u16)99

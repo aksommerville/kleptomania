@@ -1,0 +1,5 @@
+image image:sprites
+tile 182 0
+type (u16:sprtype)villager
+treasure (u16:treasure)sock
+layer (u16)99

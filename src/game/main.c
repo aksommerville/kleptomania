@@ -20,6 +20,9 @@ int egg_client_init() {
     return -1;
   }
   
+  // Was thinking I wouldn't need rand, but actually we do, for cosmetic things only.
+  srand_auto();
+  
   if (camera_init_scratches()<0) return -1;
   if (res_init()<0) return -1;
   

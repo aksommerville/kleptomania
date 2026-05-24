@@ -1,0 +1,5 @@
+image image:sprites
+tile 176 0
+type (u16:sprtype)villager
+treasure (u16:treasure)avocado
+layer (u16)99

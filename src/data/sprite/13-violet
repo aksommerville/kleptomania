@@ -1,0 +1,5 @@
+image image:sprites
+tile 179 0
+type (u16:sprtype)villager
+treasure (u16:treasure)violin
+layer (u16)99

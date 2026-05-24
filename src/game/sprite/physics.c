@@ -41,6 +41,7 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
     double ql=(_ql),qr=(_qr),qt=(_qt),qb=(_qb); \
     if ((nl>=qr)||(nr<=ql)||(nt>=qb)||(nb<=qt)) { \
     } else { \
+      CHECKBOX_EXTRA \
       switch (dir) { \
         case 0x10: nx=qr-sprite->hbl; if (nx>=ox) return 0; break; \
         case 0x08: nx=ql-sprite->hbr; if (nx<=ox) return 0; break; \
@@ -50,6 +51,7 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
       REBOX \
     } \
   }
+  #define CHECKBOX_EXTRA
   
   // If we're moving downward, we also need to record the original bottom position, for oneways.
   double ob=oy+sprite->hbb;
@@ -96,6 +98,11 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
   /* Check against other solid sprites.
    */
   {
+    #undef CHECKBOX_EXTRA
+    #define CHECKBOX_EXTRA { \
+      if (sprite->type->collide) sprite->type->collide(sprite,other); \
+      if (other->type->collide) other->type->collide(other,sprite); \
+    }
     struct sprite **otherp=g.spritev;
     int i=g.spritec;
     for (;i-->0;otherp++) {
@@ -109,6 +116,7 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
   
   #undef REBOX
   #undef CHECKBOX
+  #undef CHECKBOX_EXTRA
   sprite->x=nx;
   sprite->y=ny;
   return 1;

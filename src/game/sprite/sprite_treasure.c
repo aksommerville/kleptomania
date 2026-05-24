@@ -8,17 +8,9 @@ struct sprite_treasure {
 #define SPRITE ((struct sprite_treasure*)sprite)
 
 static int _treasure_init(struct sprite *sprite) {
-  switch (sprite->tileid) {
-    case 0x90: SPRITE->treasure=NS_treasure_gem; break;
-    case 0x91: SPRITE->treasure=NS_treasure_book; break;
-    case 0x92: SPRITE->treasure=NS_treasure_crown; break;
-    case 0x93: SPRITE->treasure=NS_treasure_avocado; break;
-    case 0x94: SPRITE->treasure=NS_treasure_violin; break;
-    case 0x95: SPRITE->treasure=NS_treasure_sock; break;
-    default: {
-        fprintf(stderr,"Invalid tileid 0x%02x for treasure.\n",sprite->tileid);
-        return -1;
-      }
+  if (!(SPRITE->treasure=treasure_for_tileid(sprite->tileid))) {
+    fprintf(stderr,"Invalid tileid 0x%02x for treasure.\n",sprite->tileid);
+    return -1;
   }
   
   // Reject if this treasure is already finished, or if the hero is carrying it.
@@ -58,3 +50,45 @@ const struct sprite_type sprite_type_treasure={
   .init=_treasure_init,
   .update=_treasure_update,
 };
+
+/* Generic model bits.
+ */
+
+int treasure_for_tileid(uint8_t tileid) {
+  switch (tileid) {
+    case 0x90: return NS_treasure_gem;
+    case 0x91: return NS_treasure_book;
+    case 0x92: return NS_treasure_crown;
+    case 0x93: return NS_treasure_avocado;
+    case 0x94: return NS_treasure_violin;
+    case 0x95: return NS_treasure_sock;
+    case 0x96: return NS_treasure_key;
+  }
+  return 0;
+}
+
+uint8_t tileid_for_treasure(int treasure) {
+  switch (treasure) {
+    case NS_treasure_gem: return 0x90;
+    case NS_treasure_book: return 0x91;
+    case NS_treasure_crown: return 0x92;
+    case NS_treasure_avocado: return 0x93;
+    case NS_treasure_violin: return 0x94;
+    case NS_treasure_sock: return 0x95;
+    case NS_treasure_key: return 0x96;
+  }
+  return 0;
+}
+
+int spriteid_for_treasure(int treasure) {
+  switch (treasure) {
+    case NS_treasure_gem: return RID_sprite_gem;
+    case NS_treasure_book: return RID_sprite_book;
+    case NS_treasure_crown: return RID_sprite_crown;
+    case NS_treasure_avocado: return RID_sprite_avocado;
+    case NS_treasure_violin: return RID_sprite_violin;
+    case NS_treasure_sock: return RID_sprite_sock;
+    case NS_treasure_key: return RID_sprite_key;
+  }
+  return 0;
+}

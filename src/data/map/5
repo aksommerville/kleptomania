@@ -12,5 +12,8 @@
 
 image image:bg
 position -1 0 0 *
-sprite @5,2 sprite:crown (u32)0
-sprite @10,9 sprite:violin (u32)0
+villagers
+villspawn @4,9
+villspawn @8,9
+villspawn @6,9
+villspawn @10,9

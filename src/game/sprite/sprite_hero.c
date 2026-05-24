@@ -188,15 +188,7 @@ static void hero_drop(struct sprite *sprite) {
   int treasure=SPRITE->carrying;
   SPRITE->carrying=0;
   
-  int rid=0;
-  switch (treasure) {
-    case NS_treasure_gem: rid=RID_sprite_gem; break;
-    case NS_treasure_book: rid=RID_sprite_book; break;
-    case NS_treasure_crown: rid=RID_sprite_crown; break;
-    case NS_treasure_avocado: rid=RID_sprite_avocado; break;
-    case NS_treasure_violin: rid=RID_sprite_violin; break;
-    case NS_treasure_sock: rid=RID_sprite_sock; break;
-  }
+  int rid=spriteid_for_treasure(treasure);
   if (rid) {
     double x=sprite->x;
     double y=sprite->y-(2.0/NS_sys_tilesize);
@@ -583,15 +575,7 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
   
   // If we're carrying something, draw it, then an overlay for my forward arm.
   if (SPRITE->carrying) {
-    uint8_t carrytileid=0;
-    switch (SPRITE->carrying) {
-      case NS_treasure_gem: carrytileid=0x90; break;
-      case NS_treasure_book: carrytileid=0x91; break;
-      case NS_treasure_crown: carrytileid=0x92; break;
-      case NS_treasure_avocado: carrytileid=0x93; break;
-      case NS_treasure_violin: carrytileid=0x94; break;
-      case NS_treasure_sock: carrytileid=0x95; break;
-    }
+    uint8_t carrytileid=tileid_for_treasure(SPRITE->carrying);
     if (carrytileid) {
       int cx=x;
       if (sprite->xform&EGG_XFORM_XREV) cx-=11;
@@ -645,6 +629,10 @@ struct sprite *get_hero() {
  
 int sprite_hero_carry(struct sprite *sprite,int treasure) {
   if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  if (!treasure) { // Always able to nix the carry. Whatever happens to it after is the caller's responsibility.
+    SPRITE->carrying=0;
+    return 1;
+  }
   if (SPRITE->carrying) return 0; // One thing at a time.
   if (SPRITE->carry_blackout>0.0) return 0; // Please hold.
   if (SPRITE->dashing) return 0; // Stop dashing first.

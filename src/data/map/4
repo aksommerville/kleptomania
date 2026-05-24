@@ -13,3 +13,4 @@
 image image:bg
 position 0 -1 0 *
 sprite @3,3 sprite:book (u32)0
+sprite @12,9 sprite:crown (u32)0

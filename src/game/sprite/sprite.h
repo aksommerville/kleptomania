@@ -63,6 +63,7 @@ struct sprite_type {
   void (*render)(struct sprite *sprite,int dstx,int dsty); // Single tile if not implemented.
   void (*landed)(struct sprite *sprite,double velocity); // Optional callback if you're requesting gravity.
   void (*falling)(struct sprite *sprite); // ''
+  void (*collide)(struct sprite *sprite,struct sprite *other);
 };
 
 const struct sprite_type *sprite_type_by_id(int sprtype); // => null if unknown

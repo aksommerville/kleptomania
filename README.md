@@ -66,18 +66,18 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Carry.
 - - [x] Death: Respawn instantly wherever you entered the room.
 - [ ] Properer graphics.
-- [ ] Rest of environment.
+- [x] Rest of environment.
 - - [x] Solids.
 - - [x] One-way platforms.
-- - [ ] Moving platforms.
+- - [x] Moving platforms.
 - - [x] Hazards.
 - [x] Need some kind of mitigation against navigating up when the jump is about to crest; you fall right back down.
 - - We read nearest-neighbor for physics purposes, so actually there's an easy way to do this. Just always use a double-oneway around vertical neighbors.
 - - Just need one mitigation at OOB detect: When going up, only go if her feet have cleared the map, instead of center.
 - - UPDATE: Nix the OOB repeat for oneways, and require toes past (h-1) for an upward transition. Much neater, one doesn't even notice that any mitigation is happening.
 - - Just need to ensure that such passages always have a oneway at the bottom of the top map, and the launchpad on bottom map is at row <=2.
-- [ ] Dialogue. Try fully passive dialogue in word bubbles.
-- [ ] Things to find and deliver.
+- [x] Dialogue. Try fully passive dialogue in word bubbles. ...with villagers made, i'm not convinced that we're going to need words at all.
+- [x] Things to find and deliver.
 - [ ] World map.
 - - Start outside, with ample room for villagers.
 - - Require a dash to get into the castle. A moat, perhaps?

@@ -55,6 +55,7 @@
 #define NS_sprtype_soulballs 5 /* (u32)0 */
 #define NS_sprtype_villager 6 /* (u32)0 */
 #define NS_sprtype_lock 7 /* (u32)0 */
+#define NS_sprtype_platform 8 /* (u8:dir)0x00 (u24)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
@@ -63,6 +64,7 @@
   _(treasure) \
   _(soulballs) \
   _(villager) \
-  _(lock)
+  _(lock) \
+  _(platform)
 
 #endif

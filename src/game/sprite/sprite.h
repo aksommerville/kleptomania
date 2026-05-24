@@ -98,6 +98,11 @@ int sprite_move(struct sprite *sprite,double dx,double dy);
  */
 void sprite_update_gravity(struct sprite *sprite,double elapsed);
 
+/* Fudge solidity the same way sprite_update_gravity does, but for any move.
+ * This is used by platform to move its pumpkins. Otherwise ambiguous solids like treasure would not work.
+ */
+//XXX int sprite_move_pretend_solid(struct sprite *sprite,double dx,double dy);
+
 /* Spam this while jumping, or gravity suspended for whatever reason.
  * This may trigger (falling).
  */

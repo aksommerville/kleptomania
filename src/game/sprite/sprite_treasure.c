@@ -23,23 +23,13 @@ static int _treasure_init(struct sprite *sprite) {
 
 static void _treasure_update(struct sprite *sprite,double elapsed) {
   sprite_update_gravity(sprite,elapsed);
-  
-  // Getting got?
-  const double xradius=0.333;
-  const double yradius=0.333;
-  struct sprite **otherp=g.spritev;
-  int i=g.spritec;
-  for (;i-->0;otherp++) {
-    struct sprite *hero=*otherp;
-    if (hero->defunct) continue;
-    if (hero->type!=&sprite_type_hero) continue;
-    double dx=hero->x-sprite->x;
-    if ((dx<-xradius)||(dx>xradius)) continue;
-    double dy=hero->y-sprite->y;
-    if ((dy<-yradius)||(dy>yradius)) continue;
-    if (sprite_hero_carry(hero,SPRITE->treasure)>0) {
+}
+
+static void _treasure_collide(struct sprite *sprite,struct sprite *other) {
+  if (!other) return;
+  if (other->type==&sprite_type_hero) {
+    if (sprite_hero_carry(other,SPRITE->treasure)>0) {
       sprite->defunct=1;
-      return;
     }
   }
 }
@@ -49,6 +39,7 @@ const struct sprite_type sprite_type_treasure={
   .objlen=sizeof(struct sprite_treasure),
   .init=_treasure_init,
   .update=_treasure_update,
+  .collide=_treasure_collide,
 };
 
 /* Generic model bits.

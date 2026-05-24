@@ -1,3 +1,4 @@
 image image:sprites
 tile 149 0
 type (u16:sprtype)treasure
+solid -8 8 -8 8

@@ -13,21 +13,18 @@ int game_reset() {
 /* Spawn villagers appropriate to current state.
  */
  
-static int spawn_villager(int rid,uint16_t *posv,int posc) {
-  double x=0.0,y=0.0;
-  for (;posc-->0;posv++) {
-    if (!*posv) continue;
-    x=((*posv)>>8)+0.5;
-    y=((*posv)&0xff)+0.5;
-    *posv=0;
-    break;
-  }
+static int spawn_villager(int rid,uint16_t pos) {
+  double x=(pos>>8)+0.5;
+  double y=(pos&0xff)+0.5;
   struct sprite *sprite=sprite_spawn(0,x,y,rid,0);
+  // Spawn failure is normal; this villager might already be satisfied. We can't distinguish real failures, and I don't think it matters.
   return 0;
 }
  
 int spawn_villagers() {
   
+  /* Find all the spawn points. There must be 4.
+   */
   uint16_t posv[8];
   int posc=0;
   struct cmdlist_reader reader={.v=g.map->cmd,.c=g.map->cmdc};
@@ -36,11 +33,15 @@ int spawn_villagers() {
     if (posc>=8) break;
     posv[posc++]=(cmd.arg[0]<<8)|cmd.arg[1];
   }
+  if (posc<4) {
+    fprintf(stderr,"map:%d: Expected 4 villager spawn points, found %d\n",g.map->rid,posc);
+    return -1;
+  }
   
   /* If we haven't delivered the Gem yet, spawn Jim.
    */
   if (!g.treasurev[NS_treasure_gem]) {
-    if (spawn_villager(RID_sprite_jim,posv,posc)<0) return -1;
+    if (spawn_villager(RID_sprite_jim,posv[0])<0) return -1;
     return 0;
   }
   
@@ -52,18 +53,18 @@ int spawn_villagers() {
     !g.treasurev[NS_treasure_avocado]||
     !g.treasurev[NS_treasure_violin]
   ) {
-    if (!g.treasurev[NS_treasure_book]&&(spawn_villager(RID_sprite_becca,posv,posc)<0)) return -1;
-    if (!g.treasurev[NS_treasure_crown]&&(spawn_villager(RID_sprite_darius,posv,posc)<0)) return -1;
-    if (!g.treasurev[NS_treasure_avocado]&&(spawn_villager(RID_sprite_abby,posv,posc)<0)) return -1;
-    if (!g.treasurev[NS_treasure_violin]&&(spawn_villager(RID_sprite_violet,posv,posc)<0)) return -1;
+    if (spawn_villager(RID_sprite_becca,posv[0])<0) return -1;
+    if (spawn_villager(RID_sprite_darius,posv[1])<0) return -1;
+    if (spawn_villager(RID_sprite_abby,posv[2])<0) return -1;
+    if (spawn_villager(RID_sprite_violet,posv[3])<0) return -1;
     return 0;
   }
   
   /* Next is Sara, with the Key if not used yet.
    */
   if (!g.treasurev[NS_treasure_sock]) {
-    if (spawn_villager(RID_sprite_sara,posv,posc)<0) return -1;
-    if (spawn_villager(RID_sprite_key,posv,posc)<0) return -1;
+    if (spawn_villager(RID_sprite_sara,posv[3])<0) return -1;
+    if (spawn_villager(RID_sprite_key,posv[0])<0) return -1;
     return 0;
   }
   

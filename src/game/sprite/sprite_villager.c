@@ -8,18 +8,9 @@ struct sprite_villager {
   double animclock;
   int animframe;
   int complaining;
-  double complainclock;
 };
 
 #define SPRITE ((struct sprite_villager*)sprite)
-
-/* Set (complainclock) for some random interval.
- */
- 
-static void villager_delay_complaint(struct sprite *sprite) {
-  SPRITE->complaining=0;
-  SPRITE->complainclock=2.000+4.000*((rand()&0xffff)/65535.0);
-}
 
 /* Init.
  */
@@ -36,8 +27,7 @@ static int _villager_init(struct sprite *sprite) {
       }
     }
   }
-  
-  villager_delay_complaint(sprite);
+  if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
   
   return 0;
 }
@@ -62,6 +52,9 @@ static void villager_maybe_spawn_new() {
  
 static void _villager_update(struct sprite *sprite,double elapsed) {
 
+  // Complaint is guilty until proven innocent. We don't need to be aware of state changes.
+  SPRITE->complaining=0;
+
   // If satisfied, walk off to the left.
   if (SPRITE->satisfied) {
     sprite->xform=EGG_XFORM_XREV;
@@ -76,37 +69,35 @@ static void _villager_update(struct sprite *sprite,double elapsed) {
     }
     return;
   }
-  
-  // Randomly complain.
-  if ((SPRITE->complainclock-=elapsed)<=0.0) {
-    if (SPRITE->complaining) {
-      villager_delay_complaint(sprite);
-    } else {
-      SPRITE->complaining=1;
-      SPRITE->complainclock=2.000;
-    }
-  }
 
-  // Not satisfied yet. Consult the hero.
+  // Not satisfied yet. Acquire the hero and look at her.
   struct sprite *hero=get_hero();
   if (!hero) return;
   double dx=hero->x-sprite->x;
   if (dx>0.0) sprite->xform=0;
   else sprite->xform=EGG_XFORM_XREV;
   
-  if (!SPRITE->satisfied&&(SPRITE->treasure>0)) {
-    double dy=hero->y-sprite->y;
-    if ((dx>=-1.0)&&(dx<=1.0)&&(dy>=-1.0)&&(dy<=1.0)) {
-      if (sprite_hero_carrying(hero)==SPRITE->treasure) {
-        kl_sound(RID_sound_deliver);
-        sprite_hero_carry(hero,0);
-        SPRITE->satisfied=1;
-        SPRITE->complaining=0;
-        if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)) {
-          g.treasurev[SPRITE->treasure]=1;
-        }
-      }
+  // If we don't have a valid treasure, that's all.
+  if ((SPRITE->treasure<=0)||(SPRITE->treasure>=TREASURE_LIMIT)||g.treasurev[SPRITE->treasure]) return;
+  
+  /* Within some wider distance, complain.
+   * Within some narrower distance, check delivery.
+   */
+  const double COMPLAIN_RADIUS=2.000;
+  const double DELIVER_RADIUS =1.000;
+  const double VERTICAL_RADIUS=1.000;
+  if ((dx<-COMPLAIN_RADIUS)||(dx>COMPLAIN_RADIUS)) return;
+  double dy=hero->y-sprite->y;
+  if ((dy<-VERTICAL_RADIUS)||(dy>VERTICAL_RADIUS)) return;
+  if ((dx>-DELIVER_RADIUS)&&(dx<DELIVER_RADIUS)&&(sprite_hero_carrying(hero)==SPRITE->treasure)) {
+    kl_sound(RID_sound_deliver);
+    sprite_hero_carry(hero,0);
+    SPRITE->satisfied=1;
+    if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)) {
+      g.treasurev[SPRITE->treasure]=1;
     }
+  } else {
+    SPRITE->complaining=1;
   }
 }
 

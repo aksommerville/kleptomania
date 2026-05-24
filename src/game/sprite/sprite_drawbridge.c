@@ -40,6 +40,7 @@ static void _drawbridge_update(struct sprite *sprite,double elapsed) {
 }
 
 static void _drawbridge_render(struct sprite *sprite,int x,int y) {
+  graf_set_image(&g.graf,sprite->imageid);
   if (g.drawbridged) {
     uint8_t tileid=sprite->tileid+2;
     int i=OPEN_W;

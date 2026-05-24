@@ -50,7 +50,8 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 
 ## TODO
 
-- [ ] !!! Only after completing all the deliveries, on navigating from start to castle's antechamber, the drawbridge and top of water go sky-colored during the transition. The hell?
+- [x] !!! Only after completing all the deliveries, on navigating from start to castle's antechamber, the drawbridge and top of water go sky-colored during the transition. The hell?
+- - ...i'd missed a graf_set_image() in the drawbridge's render hook. Why it should only happen after the flags are set will remain a mystery.
 - [x] Single screens, endless scrolling, or a mix? ...single screens. Keep it simple.
 - [x] Starter graphics.
 - [x] Map and sprite loader.

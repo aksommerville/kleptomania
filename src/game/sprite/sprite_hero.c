@@ -503,6 +503,20 @@ static void hero_check_hazards(struct sprite *sprite) {
   kl_sound(RID_sound_die);
 }
 
+/* Kill me if we're more than a screenful away from the screen. That can only mean trouble.
+ */
+ 
+static void hero_kill_if_distant(struct sprite *sprite) {
+  int rx=(int)sprite->x/NS_sys_mapw; if (sprite->x<0.0) rx--;
+  int ry=(int)sprite->y/NS_sys_maph; if (sprite->y<0.0) ry--;
+  //fprintf(stderr,"%s %d,%d f=%f,%f\n",__func__,rx,ry,sprite->x,sprite->y);
+  if ((rx<-1)||(ry<-1)||(rx>1)||(ry>1)) {
+    fprintf(stderr,"Hero too far offscreen. Killing.\n");
+    sprite->defunct=1;
+    kl_sound(RID_sound_die);
+  }
+}
+
 /* Update.
  */
  
@@ -513,6 +527,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   hero_update_jump(sprite,elapsed);
   hero_update_walk(sprite,elapsed);
   hero_check_hazards(sprite);
+  hero_kill_if_distant(sprite);
 }
 
 /* Render.

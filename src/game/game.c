@@ -7,6 +7,7 @@ int game_reset() {
   g.map=0; // If the previous session ended at a cardinal neighbor of RID_map_start, don't pan. Always fade.
   g.safex=g.safey=-1; // No default position; RID_map_start must contain an explicit spawn point.
   memset(g.treasurev,0,sizeof(g.treasurev));
+  g.drawbridged=0;
   return game_load_map(RID_map_start);
 }
 
@@ -41,7 +42,7 @@ int spawn_villagers() {
   /* If we haven't delivered the Gem yet, spawn Jim.
    */
   if (!g.treasurev[NS_treasure_gem]) {
-    if (spawn_villager(RID_sprite_jim,posv[0])<0) return -1;
+    if (spawn_villager(RID_sprite_jim,posv[1])<0) return -1;
     return 0;
   }
   
@@ -53,8 +54,8 @@ int spawn_villagers() {
     !g.treasurev[NS_treasure_avocado]||
     !g.treasurev[NS_treasure_violin]
   ) {
-    if (spawn_villager(RID_sprite_becca,posv[0])<0) return -1;
-    if (spawn_villager(RID_sprite_darius,posv[1])<0) return -1;
+    if (spawn_villager(RID_sprite_becca,posv[1])<0) return -1;
+    if (spawn_villager(RID_sprite_darius,posv[0])<0) return -1;
     if (spawn_villager(RID_sprite_abby,posv[2])<0) return -1;
     if (spawn_villager(RID_sprite_violet,posv[3])<0) return -1;
     return 0;
@@ -64,7 +65,7 @@ int spawn_villagers() {
    */
   if (!g.treasurev[NS_treasure_sock]) {
     if (spawn_villager(RID_sprite_sara,posv[3])<0) return -1;
-    if (spawn_villager(RID_sprite_key,posv[0])<0) return -1;
+    if (spawn_villager(RID_sprite_key,posv[1])<0) return -1;
     return 0;
   }
   

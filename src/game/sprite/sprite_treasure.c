@@ -54,6 +54,7 @@ int treasure_for_tileid(uint8_t tileid) {
     case 0x94: return NS_treasure_violin;
     case 0x95: return NS_treasure_sock;
     case 0x96: return NS_treasure_key;
+    case 0x97: return NS_treasure_watermelon;
   }
   return 0;
 }
@@ -67,6 +68,7 @@ uint8_t tileid_for_treasure(int treasure) {
     case NS_treasure_violin: return 0x94;
     case NS_treasure_sock: return 0x95;
     case NS_treasure_key: return 0x96;
+    case NS_treasure_watermelon: return 0x97;
   }
   return 0;
 }
@@ -80,6 +82,7 @@ int spriteid_for_treasure(int treasure) {
     case NS_treasure_violin: return RID_sprite_violin;
     case NS_treasure_sock: return RID_sprite_sock;
     case NS_treasure_key: return RID_sprite_key;
+    case NS_treasure_watermelon: return RID_sprite_watermelon;
   }
   return 0;
 }

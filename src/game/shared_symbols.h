@@ -11,7 +11,7 @@
 #define NS_sys_tilesize 16
 #define NS_sys_mapw 20
 #define NS_sys_maph 11
-#define NS_sys_bgcolor 0x78a0ab
+#define NS_sys_bgcolor 0x85d0f2
 
 #define CMD_map_villagers 0x01 /* --- */
 #define CMD_map_image     0x20 /* u16:imageid */
@@ -44,6 +44,7 @@
 #define NS_treasure_violin 5
 #define NS_treasure_sock 6
 #define NS_treasure_key 7
+#define NS_treasure_watermelon 8
 
 // Editor uses the comment after a 'sprtype' symbol as a prompt in the new-sprite modal.
 // Should match everything after 'spriteid' in the CMD_map_sprite args.
@@ -56,6 +57,7 @@
 #define NS_sprtype_villager 6 /* (u32)0 */
 #define NS_sprtype_lock 7 /* (u32)0 */
 #define NS_sprtype_platform 8 /* (u8:dir)0x00 (u24)0 */
+#define NS_sprtype_drawbridge 9 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
@@ -65,6 +67,7 @@
   _(soulballs) \
   _(villager) \
   _(lock) \
-  _(platform)
+  _(platform) \
+  _(drawbridge)
 
 #endif

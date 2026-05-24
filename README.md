@@ -50,6 +50,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 
 ## TODO
 
+- [ ] !!! Only after completing all the deliveries, on navigating from start to castle's antechamber, the drawbridge and top of water go sky-colored during the transition. The hell?
 - [x] Single screens, endless scrolling, or a mix? ...single screens. Keep it simple.
 - [x] Starter graphics.
 - [x] Map and sprite loader.
@@ -85,6 +86,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - - Dash across the ceiling.
 - - - Climb wall with 1-meter protrusions.
 - - - Catch a wall with a 5-meter elevated gap, it's just barely possible.
+- - - Wall-jump midair off a thing that you just dropped. Wasn't supposed to be possible but now it is, and it's so cool I'm leaving it in.
 - [ ] Boss. He'll offer to trade his Thing for something you can collect outside. Watermelon?
 - [x] Sound effects.
 - [ ] Music.

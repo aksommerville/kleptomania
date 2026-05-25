@@ -502,6 +502,7 @@ static void hero_check_hazards(struct sprite *sprite) {
       sprite->defunct=1;
       struct sprite *soulballs=sprite_spawn(&sprite_type_soulballs,sprite->x,sprite->y,0,0);
       kl_sound(RID_sound_die);
+      g.deathc++;
       return;
     }
     if (physics==NS_physics_safe) {
@@ -516,6 +517,7 @@ static void hero_check_hazards(struct sprite *sprite) {
       sprite->defunct=1;
       struct sprite *soulballs=sprite_spawn(&sprite_type_soulballs,sprite->x,sprite->y,0,0);
       kl_sound(RID_sound_die);
+      g.deathc++;
       return;
     }
   }
@@ -532,6 +534,7 @@ static void hero_kill_if_distant(struct sprite *sprite) {
     fprintf(stderr,"Hero too far offscreen. Killing.\n");
     sprite->defunct=1;
     kl_sound(RID_sound_die);
+    g.deathc++;
   }
 }
 

@@ -52,6 +52,7 @@ extern struct g {
   int drawbridged;
   int talked_to_vampire;
   int rung_bell;
+  int deathc;
   double deathtime; // Counts up after dying.
   double playtime;
   double wintime; // If >0, counts down to gameover.

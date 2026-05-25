@@ -10,6 +10,7 @@ int game_reset() {
   g.drawbridged=0;
   g.talked_to_vampire=0;
   g.rung_bell=0;
+  g.deathc=0;
   g.deathtime=0.0;
   g.playtime=0.0;
   g.wintime=0.0;
@@ -20,7 +21,7 @@ int game_reset() {
   }
   
   //XXX Speed things up by delivering most treasures.
-  if (0) {
+  if (1) {
     g.treasurev[NS_treasure_gem]=1;
     g.treasurev[NS_treasure_crown]=1;
     g.treasurev[NS_treasure_avocado]=1;

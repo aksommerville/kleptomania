@@ -181,21 +181,23 @@ void render_game() {
     int x=FBW-5;
     int y=5;
     graf_set_image(&g.graf,RID_image_fonttiles);
+    /*
     graf_tile(&g.graf,x,y,0x30+ms%10,0); x-=8;
     graf_tile(&g.graf,x,y,0x30+(ms/10)%10,0); x-=8;
     graf_tile(&g.graf,x,y,0x30+ms/100,0); x-=8;
     graf_tile(&g.graf,x,y,'.',0); x-=8;
+    */
     graf_tile(&g.graf,x,y,0x30+sec%10,0); x-=8;
-    if ((sec>=10)||(min>0)) {
-      graf_tile(&g.graf,x,y,0x30+sec/10,0); x-=8;
-      if (min>0) {
-        graf_tile(&g.graf,x,y,':',0); x-=8;
+    //if ((sec>=10)||(min>0)) {
+      graf_tile(&g.graf,x,y,0x30+sec/10,0); x-=7;
+      //if (min>0) {
+        if (ms<500) graf_tile(&g.graf,x,y,':',0); x-=6;
         graf_tile(&g.graf,x,y,0x30+min%10,0); x-=8;
         if (min>=10) {
           graf_tile(&g.graf,x,y,0x30+min/10,0); x-=8;
         }
-      }
-    }
+      //}
+    //}
   }
   
   /* Fade out as winclock winds down.

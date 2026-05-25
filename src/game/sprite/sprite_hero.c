@@ -492,15 +492,29 @@ static void hero_update_walk(struct sprite *sprite,double elapsed) {
  
 static void hero_check_hazards(struct sprite *sprite) {
   int x=(int)sprite->x;
-  int y=(int)sprite->y;
-  if (SPRITE->jumping||(SPRITE->dashing&&(SPRITE->dashdy<0))) y=(int)(sprite->y-0.5);
-  if ((x<0)||(y<0)||(x>=NS_sys_mapw)||(y>=NS_sys_maph)) return;
-  uint8_t tileid=g.map->v[y*NS_sys_mapw+x];
-  uint8_t physics=g.map->physics[tileid];
-  if (physics!=NS_physics_hazard) return;
-  sprite->defunct=1;
-  struct sprite *soulballs=sprite_spawn(&sprite_type_soulballs,sprite->x,sprite->y,0,0);
-  kl_sound(RID_sound_die);
+  if ((x<0)||(x>=NS_sys_mapw)) return;
+  int ay=(int)sprite->y;
+  int by=(int)(sprite->y-0.75);
+  if ((ay>=0)&&(ay<NS_sys_maph)) {
+    uint8_t tileid=g.map->v[ay*NS_sys_mapw+x];
+    uint8_t physics=g.map->physics[tileid];
+    if (physics==NS_physics_hazard) {
+      sprite->defunct=1;
+      struct sprite *soulballs=sprite_spawn(&sprite_type_soulballs,sprite->x,sprite->y,0,0);
+      kl_sound(RID_sound_die);
+      return;
+    }
+  }
+  if ((by!=ay)&&(by>=0)&&(by<NS_sys_maph)) {
+    uint8_t tileid=g.map->v[by*NS_sys_mapw+x];
+    uint8_t physics=g.map->physics[tileid];
+    if (physics==NS_physics_hazard) {
+      sprite->defunct=1;
+      struct sprite *soulballs=sprite_spawn(&sprite_type_soulballs,sprite->x,sprite->y,0,0);
+      kl_sound(RID_sound_die);
+      return;
+    }
+  }
 }
 
 /* Kill me if we're more than a screenful away from the screen. That can only mean trouble.

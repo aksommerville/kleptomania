@@ -51,6 +51,7 @@ extern struct g {
   int treasurev[TREASURE_LIMIT]; // Indexed by NS_treasure_*. Nonzero if this treasure has been delivered.
   int drawbridged;
   int talked_to_vampire;
+  int rung_bell;
   double deathtime; // Counts up after dying.
   double playtime;
   double wintime; // If >0, counts down to gameover.

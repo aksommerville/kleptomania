@@ -60,6 +60,7 @@
 #define NS_sprtype_platform 8 /* (u8:dir)0x00 (u24)0 */
 #define NS_sprtype_drawbridge 9 /* (u32)0 */
 #define NS_sprtype_vampire 10 /* (u32)0 */
+#define NS_sprtype_bell 11 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
@@ -71,6 +72,7 @@
   _(lock) \
   _(platform) \
   _(drawbridge) \
-  _(vampire)
+  _(vampire) \
+  _(bell)
 
 #endif

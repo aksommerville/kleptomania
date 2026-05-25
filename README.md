@@ -49,6 +49,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - Cloud city. Get there by scaling the tower from outside.
 
 2026-05-25T14:48: I think the main quest is at least physically final now. Can clear in 1:55, but that's a stretch.
+...and 2:38, with the bell rung. Could do better there I think.
 
 ## TODO
 
@@ -88,16 +89,16 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [ ] Ending.
 - [ ] Hello modal.
 - [x] Add an explicit "safe point" POI command. Specifically for the room with vertical platforms, where you enter from below. To override `g.(safex,safey)` manually.
-- [ ] World map.
+- [x] World map.
 - - Start outside, with ample room for villagers.
 - - Require a dash to get into the castle. A moat, perhaps?
-- - [ ] Optional challenge zone if you go straight up from the first castle room. Climb the bell tower!
-- - - Dash across the ceiling.
-- - - Climb wall with 1-meter protrusions.
+- - [x] Optional challenge zone if you go straight up from the first castle room. Climb the bell tower!
+- - - X Dash across the ceiling.
+- - - X Climb wall with 1-meter protrusions.
 - - - Catch a wall with a 5-meter elevated gap, it's just barely possible. ...but there's no situation where you can walljump but not dash, is there?
 - - - Wall-jump midair off a thing that you just dropped. Wasn't supposed to be possible but now it is, and it's so cool I'm leaving it in.
-- - - Dash sideways repeatedly into a horizontal platform. Would that work?
-- - - Ceiling-dash on the bottom of a horizontal platform.
+- - - X Dash sideways repeatedly into a horizontal platform. Would that work? ...hell yeah it would
+- - - Ceiling-dash on the bottom of a horizontal platform. ...I don't think this is possible in any case where dashing into the side wouldn't also work (and the side is much easier).
 - [x] Sound effects.
 - [x] Music.
 - [ ] Enter the Konami code at any time to change your hat.

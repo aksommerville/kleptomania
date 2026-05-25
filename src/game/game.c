@@ -9,6 +9,7 @@ int game_reset() {
   memset(g.treasurev,0,sizeof(g.treasurev));
   g.drawbridged=0;
   g.talked_to_vampire=0;
+  g.rung_bell=0;
   g.deathtime=0.0;
   g.playtime=0.0;
   g.wintime=0.0;

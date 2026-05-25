@@ -21,7 +21,7 @@ int game_reset() {
   }
   
   //XXX Speed things up by delivering most treasures.
-  if (1) {
+  if (0) {
     g.treasurev[NS_treasure_gem]=1;
     g.treasurev[NS_treasure_crown]=1;
     g.treasurev[NS_treasure_avocado]=1;

@@ -85,7 +85,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Things to find and deliver.
 - [x] Speed clock.
 - [x] Vampire.
-- [ ] Vampire dialogue.
+- [x] Vampire dialogue.
 - [x] Ending.
 - [ ] Hello modal.
 - [ ] Pause modal, to restart or return to menu.

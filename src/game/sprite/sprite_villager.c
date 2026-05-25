@@ -96,6 +96,9 @@ static void _villager_update(struct sprite *sprite,double elapsed) {
     if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)) {
       g.treasurev[SPRITE->treasure]=1;
     }
+    if (SPRITE->treasure==NS_treasure_sock) { // You win!
+      if (g.wintime<=0.0) g.wintime=2.0;
+    }
   } else {
     SPRITE->complaining=1;
   }

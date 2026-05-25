@@ -15,3 +15,4 @@ position 1 0 0 *
 sprite @16,9 sprite:avocado (u32)0
 sprite @14,3 sprite:crown (u32)0
 sprite @9,9 sprite:vampire (u32)0
+sprite @8,9 sprite:sock (u32)0

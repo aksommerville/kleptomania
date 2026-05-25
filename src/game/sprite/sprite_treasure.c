@@ -13,12 +13,26 @@ static int _treasure_init(struct sprite *sprite) {
     return -1;
   }
   
-  // Reject if this treasure is already finished, or if the hero is carrying it.
-  if (SPRITE->treasure!=NS_treasure_watermelon) { // But watermelons grow abundantly, even after you picked one.
-    if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
-    struct sprite *hero=get_hero();
-    if (sprite_hero_carrying(hero)==SPRITE->treasure) return -1;
+  /* Sock is special.
+   * Normally you get it by talking to the vampire, trading a watermelon for it.
+   * But like any treasure, you can lose it along the way.
+   * So there's an emergency sock sprite next to the vampire, in case you lose it and come back for another.
+   */
+  if (SPRITE->treasure==NS_treasure_sock) {
+    if (!g.treasurev[NS_treasure_watermelon]) return -1;
+    // And also the default rules below.
   }
+  
+  /* Watermelons are also special; they grow back.
+   */
+  if (SPRITE->treasure==NS_treasure_watermelon) {
+    return 0;
+  }
+  
+  // Reject if this treasure is already finished, or if the hero is carrying it.
+  if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
+  struct sprite *hero=get_hero();
+  if (sprite_hero_carrying(hero)==SPRITE->treasure) return -1;
   
   return 0;
 }

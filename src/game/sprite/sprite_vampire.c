@@ -35,14 +35,14 @@ static int _vampire_init(struct sprite *sprite) {
 static void vampire_update_PLAY(struct sprite *sprite,double elapsed) {
   if ((SPRITE->animclock-=elapsed)<=0.0) {
     SPRITE->animclock+=0.300;
-    if (++(SPRITE->animframe)>=20) SPRITE->animframe=0;//TODO period
+    if (++(SPRITE->animframe)>=24) SPRITE->animframe=0;
   }
   struct sprite *hero=get_hero();
   if (!hero) return;
   double dx=hero->x-sprite->x;
   double dy=hero->y-sprite->y;
   if ((dy>-1.0)&&(dy<1.0)&&(dx>-1.0)&&(dx<1.0)) {
-    fprintf(stderr,"%s:%d:TODO: Begin vampire dialogue\n",__FILE__,__LINE__);
+    vampire_begin();
     g.talked_to_vampire=1;
     SPRITE->stage=STAGE_WAIT;
     SPRITE->animclock=0.0;
@@ -122,14 +122,18 @@ static void _vampire_render(struct sprite *sprite,int x,int y) {
         case  9: tileid+=2; break;
         case 10: tileid+=0; break;
         case 11: tileid+=2; break;
-        case 12: tileid+=3; break;
-        case 13: tileid+=4; break;
-        case 14: tileid+=3; break;
-        case 15: tileid+=4; break;
+        case 12: tileid+=0; break;
+        case 13: tileid+=1; break;
+        case 14: tileid+=0; break;
+        case 15: tileid+=1; break;
         case 16: tileid+=3; break;
         case 17: tileid+=4; break;
         case 18: tileid+=3; break;
         case 19: tileid+=4; break;
+        case 20: tileid+=3; break;
+        case 21: tileid+=4; break;
+        case 22: tileid+=3; break;
+        case 23: tileid+=4; break;
       } break;
     case STAGE_WAIT: {
         tileid+=5;

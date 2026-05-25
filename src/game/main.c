@@ -26,7 +26,7 @@ int egg_client_init() {
   if (camera_init_scratches()<0) return -1;
   if (res_init()<0) return -1;
   
-  if (game_reset()<0) return -1;
+  hello_begin();
 
   return 0;
 }
@@ -39,15 +39,16 @@ void egg_client_update(double elapsed) {
   g.pvinput=g.input;
   g.input=egg_input_get_one(0);
   
-  //TODO modals, global input triggers?
-  
-  g.playtime+=elapsed;
-  if (g.screenshake>0.0) {
-    g.screenshake-=elapsed;
+  int modal0=g.modal;
+  switch (g.modal) {
+    case MODAL_HELLO: hello_update(elapsed); break;
+    case MODAL_VAMPIRE: vampire_update(elapsed); break;
+    case MODAL_GAMEOVER: gameover_update(elapsed); break;
+    default: game_update(elapsed); break;
   }
-  sprites_update(elapsed);
-  if (g.txclock>0.0) g.txclock-=elapsed;
-  check_transitions(elapsed);
+  if (modal0&&!g.modal) { // A modal just dismissed. Update the game, to avoid a possible flicker frame.
+    game_update(elapsed);
+  }
 }
 
 /* Render.
@@ -55,8 +56,12 @@ void egg_client_update(double elapsed) {
 
 void egg_client_render() {
   graf_reset(&g.graf);
-  //TODO modals
-  render_game();
+  switch (g.modal) {
+    case MODAL_HELLO: hello_render(); break;
+    case MODAL_VAMPIRE: vampire_render(); break;
+    case MODAL_GAMEOVER: gameover_render(); break;
+    default: render_game();
+  }
   graf_flush(&g.graf);
 }
 

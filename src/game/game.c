@@ -8,9 +8,25 @@ int game_reset() {
   g.safex=g.safey=-1; // No default position; RID_map_start must contain an explicit spawn point.
   memset(g.treasurev,0,sizeof(g.treasurev));
   g.drawbridged=0;
+  g.talked_to_vampire=0;
+  g.deathtime=0.0;
   g.playtime=0.0;
+  g.wintime=0.0;
   egg_play_song(1,RID_song_chuck_stake,1,0.250,0.0);
-  //egg_play_song(1,RID_song_kleptomania,1,0.333,0.0);
+  while (g.spritec>0) {
+    g.spritec--;
+    sprite_del(g.spritev[g.spritec]);
+  }
+  
+  //XXX Speed things up by delivering most treasures.
+  if (0) {
+    g.treasurev[NS_treasure_gem]=1;
+    g.treasurev[NS_treasure_crown]=1;
+    g.treasurev[NS_treasure_avocado]=1;
+    g.treasurev[NS_treasure_violin]=1;
+    g.treasurev[NS_treasure_book]=1;
+  }
+  
   return game_load_map(RID_map_start);
 }
 
@@ -72,6 +88,11 @@ int spawn_villagers() {
     return 0;
   }
   
+  /* Sock is delivered. If we're not already pending gameover, start pending it.
+   * This is not the normal way for (wintime) to get set; that's in sprite_villager.c.
+   */
+  if (g.wintime<=0.0) g.wintime=2.000;
+  
   return 0;
 }
 
@@ -103,6 +124,12 @@ int game_load_map(int rid) {
     else if ((dx==0)&&(dy==-1)) g.transition=TRANSITION_PAN_UP;
   }
   camera_draw_txbits(g.transition==TRANSITION_FADE);
+  
+  /* If it's TRANSITION_FADE and no prior map, start the clock halfway thru, ie from black.
+   */
+  if (!g.map&&(g.transition==TRANSITION_FADE)) {
+    g.txclock*=0.5;
+  }
   
   /* Drop sprites.
    * The hero gets treated a little special, depending what kind of transition we're doing.
@@ -224,4 +251,24 @@ void check_transitions(double elapsed) {
   struct map *nmap=map_by_position(g.map->lng+dx,g.map->lat+dy);
   if (!nmap) return;
   game_load_map(nmap->rid);
+}
+
+/* Update.
+ */
+ 
+void game_update(double elapsed) {
+  if (g.wintime<=0.0) { // Playclock stops the moment you deliver the sock. But we keep running for a little bit.
+    g.playtime+=elapsed;
+  }
+  if (g.screenshake>0.0) {
+    g.screenshake-=elapsed;
+  }
+  sprites_update(elapsed);
+  if (g.txclock>0.0) g.txclock-=elapsed;
+  check_transitions(elapsed);
+  if (g.wintime>0.0) {
+    if ((g.wintime-=elapsed)<=0.0) {
+      gameover_begin();
+    }
+  }
 }

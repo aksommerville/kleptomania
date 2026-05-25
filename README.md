@@ -84,6 +84,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Vampire.
 - [ ] Vampire dialogue.
 - [ ] Ending.
+- [ ] Hello modal.
 - [ ] World map.
 - - Start outside, with ample room for villagers.
 - - Require a dash to get into the castle. A moat, perhaps?

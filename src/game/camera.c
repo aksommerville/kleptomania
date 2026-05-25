@@ -197,4 +197,14 @@ void render_game() {
       }
     }
   }
+  
+  /* Fade out as winclock winds down.
+   */
+  if (g.wintime>0.0) {
+    int alpha=255-(int)(g.wintime*255.0);
+    if (alpha>0) {
+      if (alpha>0xff) alpha=0xff;
+      graf_fill_rect(&g.graf,0,0,FBW,FBH,0x00000000|alpha);
+    }
+  }
 }

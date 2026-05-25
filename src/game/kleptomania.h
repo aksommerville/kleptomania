@@ -25,6 +25,10 @@
 
 #define TREASURE_LIMIT 9
 
+#define MODAL_HELLO 1
+#define MODAL_VAMPIRE 2
+#define MODAL_GAMEOVER 3
+
 extern struct g {
 
   // res.c
@@ -49,6 +53,7 @@ extern struct g {
   int talked_to_vampire;
   double deathtime; // Counts up after dying.
   double playtime;
+  double wintime; // If >0, counts down to gameover.
   
   // sprite.c
   struct sprite **spritev;
@@ -61,6 +66,9 @@ extern struct g {
   int bgbits_dirty;
   int sortd;
   double screenshake; // Counts down.
+  
+  // Modals are bespoke. They have their own global state and API. We just record which is active, or zero if playing.
+  int modal;
   
 } g;
 
@@ -87,9 +95,22 @@ int game_reset();
 int game_load_map(int rid);
 void check_transitions(double elapsed);
 int spawn_villagers(); // Normally happens during game_load_map(), but you can poke it manually when everybody's gone.
+void game_update(double elapsed);
 
+// sprite/sprite_treasure.c
 int treasure_for_tileid(uint8_t tileid);
 uint8_t tileid_for_treasure(int treasure);
 int spriteid_for_treasure(int treasure);
+
+// modal/*.c
+void hello_begin();
+void hello_update(double elapsed);
+void hello_render();
+void vampire_begin();
+void vampire_update(double elapsed);
+void vampire_render();
+void gameover_begin();
+void gameover_update(double elapsed);
+void gameover_render();
 
 #endif

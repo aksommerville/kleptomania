@@ -167,5 +167,34 @@ void render_game() {
     render_game_inner(0,dsty,1);
   }
   
-  //TODO overlay, anything independent of transition.
+  /* Speed clock on top.
+   */
+  {
+    int ms=(int)(g.playtime*1000.0);
+    if (ms<0) ms=0;
+    int sec=ms/1000; ms%=1000;
+    int min=sec/60; sec%=60;
+    if (min>99) {
+      min=sec=99;
+      ms=999;
+    }
+    int x=FBW-5;
+    int y=5;
+    graf_set_image(&g.graf,RID_image_fonttiles);
+    graf_tile(&g.graf,x,y,0x30+ms%10,0); x-=8;
+    graf_tile(&g.graf,x,y,0x30+(ms/10)%10,0); x-=8;
+    graf_tile(&g.graf,x,y,0x30+ms/100,0); x-=8;
+    graf_tile(&g.graf,x,y,'.',0); x-=8;
+    graf_tile(&g.graf,x,y,0x30+sec%10,0); x-=8;
+    if ((sec>=10)||(min>0)) {
+      graf_tile(&g.graf,x,y,0x30+sec/10,0); x-=8;
+      if (min>0) {
+        graf_tile(&g.graf,x,y,':',0); x-=8;
+        graf_tile(&g.graf,x,y,0x30+min%10,0); x-=8;
+        if (min>=10) {
+          graf_tile(&g.graf,x,y,0x30+min/10,0); x-=8;
+        }
+      }
+    }
+  }
 }

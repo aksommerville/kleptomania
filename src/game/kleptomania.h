@@ -23,7 +23,7 @@
 #define TRANSITION_PAN_UP     4
 #define TRANSITION_PAN_DOWN   5
 
-#define TREASURE_LIMIT 8
+#define TREASURE_LIMIT 9
 
 extern struct g {
 
@@ -46,7 +46,9 @@ extern struct g {
   int input,pvinput;
   int treasurev[TREASURE_LIMIT]; // Indexed by NS_treasure_*. Nonzero if this treasure has been delivered.
   int drawbridged;
+  int talked_to_vampire;
   double deathtime; // Counts up after dying.
+  double playtime;
   
   // sprite.c
   struct sprite **spritev;

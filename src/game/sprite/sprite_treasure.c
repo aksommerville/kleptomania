@@ -14,9 +14,11 @@ static int _treasure_init(struct sprite *sprite) {
   }
   
   // Reject if this treasure is already finished, or if the hero is carrying it.
-  if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
-  struct sprite *hero=get_hero();
-  if (sprite_hero_carrying(hero)==SPRITE->treasure) return -1;
+  if (SPRITE->treasure!=NS_treasure_watermelon) { // But watermelons grow abundantly, even after you picked one.
+    if ((SPRITE->treasure>=0)&&(SPRITE->treasure<TREASURE_LIMIT)&&g.treasurev[SPRITE->treasure]) return -1;
+    struct sprite *hero=get_hero();
+    if (sprite_hero_carrying(hero)==SPRITE->treasure) return -1;
+  }
   
   return 0;
 }

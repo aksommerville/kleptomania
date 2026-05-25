@@ -41,6 +41,7 @@ void egg_client_update(double elapsed) {
   
   //TODO modals, global input triggers?
   
+  g.playtime+=elapsed;
   if (g.screenshake>0.0) {
     g.screenshake-=elapsed;
   }

@@ -56,7 +56,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Starter graphics.
 - [x] Map and sprite loader.
 - [x] General physics. I think we can do 1d impulse physics on rects as usual, nothing super fancy.
-- [ ] Hero.
+- [x] Hero.
 - - [x] Walk.
 - - [x] Jump.
 - - [x] Duck.
@@ -80,6 +80,10 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - Just need to ensure that such passages always have a oneway at the bottom of the top map, and the launchpad on bottom map is at row <=2.
 - [x] Dialogue. Try fully passive dialogue in word bubbles. ...with villagers made, i'm not convinced that we're going to need words at all.
 - [x] Things to find and deliver.
+- [x] Speed clock.
+- [x] Vampire.
+- [ ] Vampire dialogue.
+- [ ] Ending.
 - [ ] World map.
 - - Start outside, with ample room for villagers.
 - - Require a dash to get into the castle. A moat, perhaps?
@@ -90,7 +94,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - - Wall-jump midair off a thing that you just dropped. Wasn't supposed to be possible but now it is, and it's so cool I'm leaving it in.
 - - - Dash sideways repeatedly into a horizontal platform. Would that work?
 - - - Ceiling-dash on the bottom of a horizontal platform.
-- [ ] Boss. He'll offer to trade his Thing for something you can collect outside. Watermelon?
 - [x] Sound effects.
 - [x] Music.
+- [ ] Enter the Konami code at any time to change your hat.
 - [ ] Itch page.

@@ -86,9 +86,11 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [ ] Optional challenge zone if you go straight up from the first castle room. Climb the bell tower!
 - - - Dash across the ceiling.
 - - - Climb wall with 1-meter protrusions.
-- - - Catch a wall with a 5-meter elevated gap, it's just barely possible.
+- - - Catch a wall with a 5-meter elevated gap, it's just barely possible. ...but there's no situation where you can walljump but not dash, is there?
 - - - Wall-jump midair off a thing that you just dropped. Wasn't supposed to be possible but now it is, and it's so cool I'm leaving it in.
+- - - Dash sideways repeatedly into a horizontal platform. Would that work?
+- - - Ceiling-dash on the bottom of a horizontal platform.
 - [ ] Boss. He'll offer to trade his Thing for something you can collect outside. Watermelon?
 - [x] Sound effects.
-- [ ] Music.
+- [x] Music.
 - [ ] Itch page.

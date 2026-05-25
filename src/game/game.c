@@ -8,6 +8,7 @@ int game_reset() {
   g.safex=g.safey=-1; // No default position; RID_map_start must contain an explicit spawn point.
   memset(g.treasurev,0,sizeof(g.treasurev));
   g.drawbridged=0;
+  egg_play_song(1,RID_song_chuck_stake,1,0.333,0.0);
   return game_load_map(RID_map_start);
 }
 

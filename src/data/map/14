@@ -12,6 +12,6 @@
 
 image image:bg
 position 2 -2 0 *
-sprite @16,8 sprite:platform (u8:dir)0x02 (u24)0
-sprite @8,8 sprite:platform (u8:dir)0x02 (u24)0
-sprite @12,8 sprite:platform (u8:dir)0x02 (u24)0
+sprite @16,8 sprite:platform (u8:dir)0x40 (u24)0
+sprite @8,8 sprite:platform (u8:dir)0x40 (u24)0
+sprite @12,8 sprite:platform (u8:dir)0x40 (u24)0

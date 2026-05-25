@@ -36,6 +36,7 @@
 #define NS_physics_solid 1
 #define NS_physics_oneway 2
 #define NS_physics_hazard 3
+#define NS_physics_safe 4 /* To manually mark a safe point. Overrides (g.safex,y) if you touch it. */
 
 #define NS_treasure_gem 1
 #define NS_treasure_book 2

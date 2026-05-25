@@ -48,6 +48,8 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - Bell tower
 - - Cloud city. Get there by scaling the tower from outside.
 
+2026-05-25T14:48: I think the main quest is at least physically final now. Can clear in 1:55, but that's a stretch.
+
 ## TODO
 
 - [x] !!! Only after completing all the deliveries, on navigating from start to castle's antechamber, the drawbridge and top of water go sky-colored during the transition. The hell?
@@ -85,7 +87,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [ ] Vampire dialogue.
 - [ ] Ending.
 - [ ] Hello modal.
-- [ ] Add an explicit "safe point" POI command. Specifically for the room with vertical platforms, where you enter from below. To override `g.(safex,safey)` manually.
+- [x] Add an explicit "safe point" POI command. Specifically for the room with vertical platforms, where you enter from below. To override `g.(safex,safey)` manually.
 - [ ] World map.
 - - Start outside, with ample room for villagers.
 - - Require a dash to get into the castle. A moat, perhaps?

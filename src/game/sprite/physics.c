@@ -83,6 +83,7 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
             // Oneways on the edge, everything beyond them is vacant, not more oneways.
             physics=NS_physics_vacant;
           }
+          if (physics==NS_physics_safe) continue;
           if (physics==NS_physics_vacant) continue;
           if (physics==NS_physics_hazard) continue; // hazards are not our problem.
           if (physics==NS_physics_oneway) {

@@ -504,6 +504,10 @@ static void hero_check_hazards(struct sprite *sprite) {
       kl_sound(RID_sound_die);
       return;
     }
+    if (physics==NS_physics_safe) {
+      g.safex=x;
+      g.safey=ay;
+    }
   }
   if ((by!=ay)&&(by>=0)&&(by<NS_sys_maph)) {
     uint8_t tileid=g.map->v[by*NS_sys_mapw+x];

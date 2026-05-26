@@ -3,6 +3,7 @@
 static struct {
   int texid;
   int texw,texh;
+  int is_hiscore;
 } gameover={0};
 
 /* Generate a line of the final report.
@@ -87,8 +88,10 @@ static void gameover_report_time(int row,const char *k,double sf) {
  
 static void gameover_compose_report() {
 
+  gameover.is_hiscore=hiscore_check();
+
   gameover.texw=FBW;
-  gameover.texh=8*7;
+  gameover.texh=8*9;
 
   if (!gameover.texid) gameover.texid=egg_texture_new();
   egg_texture_load_raw(gameover.texid,gameover.texw,gameover.texh,gameover.texw<<2,0,0);
@@ -103,6 +106,9 @@ static void gameover_compose_report() {
   gameover_report_time(4,"Time",g.playtime);
   gameover_report_integer(5,"Death",g.deathc);
   gameover_report_kv(6,"Bell",g.rung_bell?"Rung":"---",-1);
+  if (gameover.is_hiscore) {
+    gameover_report_text(8,"New high score!",-1);
+  }
   
   graf_set_output(&g.graf,1);
 }

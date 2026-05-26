@@ -72,6 +72,9 @@ extern struct g {
   // Modals are bespoke. They have their own global state and API. We just record which is active, or zero if playing.
   int modal;
   
+  char hiscore_any[9]; // MM:SS.mmm, or all nuls
+  char hiscore_100[9]; // ''
+  
 } g;
 
 // main.c
@@ -114,5 +117,9 @@ void vampire_render();
 void gameover_begin();
 void gameover_update(double elapsed);
 void gameover_render();
+
+// hiscore.c
+void hiscore_load();
+int hiscore_check(); // Saves if warranted. Returns nonzero if new high score.
 
 #endif

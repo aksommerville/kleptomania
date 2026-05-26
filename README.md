@@ -87,7 +87,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Vampire.
 - [x] Vampire dialogue.
 - [x] Ending.
-- [ ] Hello modal.
+- [x] Hello modal.
 - [ ] Pause modal, to restart or return to menu.
 - [x] Add an explicit "safe point" POI command. Specifically for the room with vertical platforms, where you enter from below. To override `g.(safex,safey)` manually.
 - [x] World map.
@@ -103,5 +103,5 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Sound effects.
 - [x] Music.
 - [ ] Enter the Konami code at any time to change your hat.
-- [ ] Persist high score, and show at Hello.
+- [x] Persist high score, and show at Hello.
 - [ ] Itch page.

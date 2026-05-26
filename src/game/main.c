@@ -25,6 +25,7 @@ int egg_client_init() {
   
   if (camera_init_scratches()<0) return -1;
   if (res_init()<0) return -1;
+  hiscore_load();
   
   hello_begin();
 

@@ -28,6 +28,7 @@
 #define MODAL_HELLO 1
 #define MODAL_VAMPIRE 2
 #define MODAL_GAMEOVER 3
+#define MODAL_PAUSE 4
 
 extern struct g {
 
@@ -117,6 +118,9 @@ void vampire_render();
 void gameover_begin();
 void gameover_update(double elapsed);
 void gameover_render();
+void pause_begin();
+void pause_update(double elapsed);
+void pause_render(); // Render game first.
 
 // hiscore.c
 void hiscore_load();

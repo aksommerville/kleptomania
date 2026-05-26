@@ -259,6 +259,10 @@ void check_transitions(double elapsed) {
  */
  
 void game_update(double elapsed) {
+  if ((g.input&EGG_BTN_AUX1)&&!(g.pvinput&EGG_BTN_AUX1)) {
+    pause_begin();
+    return;
+  }
   if (g.wintime<=0.0) { // Playclock stops the moment you deliver the sock. But we keep running for a little bit.
     g.playtime+=elapsed;
   }

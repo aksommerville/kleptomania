@@ -88,7 +88,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - [x] Vampire dialogue.
 - [x] Ending.
 - [x] Hello modal.
-- [ ] Pause modal, to restart or return to menu.
+- [x] Pause modal, to restart or return to menu.
 - [x] Add an explicit "safe point" POI command. Specifically for the room with vertical platforms, where you enter from below. To override `g.(safex,safey)` manually.
 - [x] World map.
 - - Start outside, with ample room for villagers.

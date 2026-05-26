@@ -11,7 +11,7 @@
 #define NS_sys_tilesize 16
 #define NS_sys_mapw 20
 #define NS_sys_maph 11
-#define NS_sys_bgcolor 0x201030
+#define NS_sys_bgcolor 0x3a2840
 
 #define CMD_map_villagers 0x01 /* --- */
 #define CMD_map_image     0x20 /* u16:imageid */

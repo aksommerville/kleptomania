@@ -45,6 +45,7 @@ void egg_client_update(double elapsed) {
     case MODAL_HELLO: hello_update(elapsed); break;
     case MODAL_VAMPIRE: vampire_update(elapsed); break;
     case MODAL_GAMEOVER: gameover_update(elapsed); break;
+    case MODAL_PAUSE: pause_update(elapsed); break;
     default: game_update(elapsed); break;
   }
   if (modal0&&!g.modal) { // A modal just dismissed. Update the game, to avoid a possible flicker frame.
@@ -61,6 +62,7 @@ void egg_client_render() {
     case MODAL_HELLO: hello_render(); break;
     case MODAL_VAMPIRE: vampire_render(); break;
     case MODAL_GAMEOVER: gameover_render(); break;
+    case MODAL_PAUSE: render_game(); pause_render(); break;
     default: render_game();
   }
   graf_flush(&g.graf);

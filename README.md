@@ -20,10 +20,10 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 2026-05-21 R 
 2026-05-22 F Have something respectably playable by EOD.
 2026-05-23 S 
-2026-05-24 U Monday is Memorial Day! We get a freebie!
+2026-05-24 U Monday is Memorial Day! We get a freebie! <-- Submitted around EOD, knowing some things will need tweaked.
 2026-05-25 M Aim to be complete by EOD, plenty of time to decide what more it needs then.
 2026-05-26 T 
-2026-05-27 W 
+2026-05-27 W <-- I believe we're final.
 2026-05-28 R Ideally submit today. Keep the second weekend free for overflow if needed, and otherwise Bellacopia.
 2026-05-29 F 
 2026-05-30 S 
@@ -77,7 +77,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Different background for each floor.
 - - [x] Something more shrine-looking for the book room.
 - - [x] Vertical floor nub for the avocado room. Also the challenge watermelon room.
-- [ ] Music and rejoicing villagers at gameover.
+- [x] Music and rejoicing villagers at gameover.
 - - Using `cleaned_clock` from Queen of Clocks temporarily. Write something new.
 - [x] Rest of environment.
 - - [x] Solids.

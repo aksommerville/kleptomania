@@ -123,7 +123,7 @@ static void gameover_compose_report() {
 void gameover_begin() {
   memset(&gameover,0,sizeof(gameover));
   g.modal=MODAL_GAMEOVER;
-  egg_play_song(1,0,1,0.0,0.0);
+  egg_play_song(1,RID_song_cleaned_clock,0,0.400,0.0);//TODO song. Currently borrowing from Queen of Clocks
   gameover_compose_report();
   
   double *v=gameover.jumpclock;

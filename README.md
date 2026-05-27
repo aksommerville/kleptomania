@@ -78,6 +78,7 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Something more shrine-looking for the book room.
 - - [x] Vertical floor nub for the avocado room. Also the challenge watermelon room.
 - [ ] Music and rejoicing villagers at gameover.
+- - Using `cleaned_clock` from Queen of Clocks temporarily. Write something new.
 - [x] Rest of environment.
 - - [x] Solids.
 - - [x] One-way platforms.

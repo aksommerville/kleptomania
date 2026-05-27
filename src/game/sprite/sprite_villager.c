@@ -98,6 +98,7 @@ static void _villager_update(struct sprite *sprite,double elapsed) {
     }
     if (SPRITE->treasure==NS_treasure_sock) { // You win!
       if (g.wintime<=0.0) g.wintime=2.0;
+      egg_play_song(1,0,1,0.0,0.0); // Stop the music immediately.
     }
   } else {
     SPRITE->complaining=1;

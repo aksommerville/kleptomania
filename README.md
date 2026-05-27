@@ -71,12 +71,13 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - [x] Carry.
 - - [x] Death: Respawn instantly wherever you entered the room.
 - [x] Would it work to hang the bell on the ceiling, and you have to climb the jagged ceiling to reach it?
-- [ ] Properer graphics.
-- - [ ] Red curtains in the vampire's room.
-- - [ ] Animated torches all over.
-- - [ ] Different background for each floor.
-- - [ ] Something more shrine-looking for the book room.
-- - [ ] Vertical floor nub for the avocado room. Also the challenge watermelon room.
+- [x] Properer graphics.
+- - [x] Red curtains in the vampire's room.
+- - [x] Animated torches all over.
+- - [x] Different background for each floor.
+- - [x] Something more shrine-looking for the book room.
+- - [x] Vertical floor nub for the avocado room. Also the challenge watermelon room.
+- [ ] Music and rejoicing villagers at gameover.
 - [x] Rest of environment.
 - - [x] Solids.
 - - [x] One-way platforms.

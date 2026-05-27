@@ -1,0 +1,4 @@
+image image:sprites
+tile 224 0
+type (u16:sprtype)torch
+layer (u16)10

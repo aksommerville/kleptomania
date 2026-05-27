@@ -12,3 +12,5 @@
 
 image image:bg
 position 1 -2 0 *
+sprite @14,8 sprite:torch (u32)0
+sprite @9,8 sprite:torch (u32)0

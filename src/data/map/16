@@ -1,4 +1,4 @@
-3737373737373737373737373737381e3e36371a
+3737373737373737373737373737385f5f36371a
 1e2f3e3f1e2e2e2e3f1f2e3e2e1f3f080a2e1e26
 3f2e2f3f1e1f0b2f1e3e2f1e3f1e2f1e3f1e2e26
 183e1e1f2f0e390c1e2f2e1f2f2e1e2e2e3f1e26
@@ -14,3 +14,4 @@ image image:bg
 position 3 0 0 *
 sprite @6,6 sprite:platform (u8:dir)0x08 (u24)0
 sprite @4,8 sprite:platform (u8:dir)0x10 (u24)0
+sprite @17,2 sprite:torch (u32)0

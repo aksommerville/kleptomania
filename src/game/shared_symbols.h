@@ -61,6 +61,7 @@
 #define NS_sprtype_drawbridge 9 /* (u32)0 */
 #define NS_sprtype_vampire 10 /* (u32)0 */
 #define NS_sprtype_bell 11 /* (u32)0 */
+#define NS_sprtype_torch 12 /* (u32)0 */
 #define FOR_EACH_SPRTYPE \
   _(dummy) \
   _(hero) \
@@ -73,6 +74,7 @@
   _(platform) \
   _(drawbridge) \
   _(vampire) \
-  _(bell)
+  _(bell) \
+  _(torch)
 
 #endif

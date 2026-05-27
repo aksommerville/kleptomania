@@ -7,9 +7,12 @@
 281f2e2e3e1e2e3f1e1f1e3f2e3e1e2f1f3e1e26
 283f3f1f1f1f1e1f2f1e2f1f2e1e4f3f1f1e1e26
 281f2e1e1e3e2f1e1f2e2f3e1e1e1f1e1e2e2f26
-280b0b0b0b0b0b0b0b0b0b0b0b0b391e2e4f1e26
-2917171717171717171717171717183e3e16172a
+280b0b0b0b0b0b0b0b0b0b0b0b0b5e1e2e4f1e26
+2917171717171717171717171717283e3e16172a
 
 image image:bg
 position 1 -4 0 *
 sprite @18,9 sprite:watermelon (u32)0
+sprite @9,5 sprite:torch (u32)0
+sprite @4,5 sprite:torch (u32)0
+sprite @14,5 sprite:torch (u32)0

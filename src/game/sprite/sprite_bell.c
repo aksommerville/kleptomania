@@ -27,7 +27,9 @@ static void _bell_update(struct sprite *sprite,double elapsed) {
     if (hero) {
       double dx=hero->x-(sprite->x+0.5);
       double dy=hero->y-sprite->y;
-      if ((dx>-0.5)&&(dx<0.5)&&(dy>-0.5)&&(dy<0.5)) {
+      // Where it's hanging, you can reach about +0.445 without cheating off the ceiling.
+      // I want to require at least one ceiling bounce to reach it.
+      if ((dx>-0.5)&&(dx<0.5)&&(dy>-0.5)&&(dy<0.333)) {
         g.rung_bell=1;
       }
     }

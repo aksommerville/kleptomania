@@ -14,6 +14,8 @@ int game_reset() {
   g.deathtime=0.0;
   g.playtime=0.0;
   g.wintime=0.0;
+  g.cheated=0;
+  g.cheatcode_clock=0.0;
   egg_play_song(1,RID_song_chuck_stake,1,0.250,0.0);
   while (g.spritec>0) {
     g.spritec--;
@@ -255,6 +257,48 @@ void check_transitions(double elapsed) {
   game_load_map(nmap->rid);
 }
 
+/* Poll for cheat code.
+ */
+ 
+static void cheatcode_update(double elapsed) {
+  
+  /* Wipe the input buffer if substantial time elapses between strokes.
+   */
+  if ((g.cheatcode_clock-=elapsed)<=0.0) {
+    g.cheatcode_clock=0.500;
+    memset(g.cheatcode,0,sizeof(g.cheatcode));
+  }
+  
+  /* If input state changed, we might be adding a stroke.
+   */
+  if (g.input!=g.pvinput) {
+    int pressed=g.input&~g.pvinput;
+    if (pressed) {
+      g.cheatcode_clock=0.500;
+      g.cheatcode[g.cheatcodep]=pressed;
+      if (++(g.cheatcodep)>=CHEATCODE_LENGTH) g.cheatcodep=0;
+      const int ref[CHEATCODE_LENGTH]={
+        EGG_BTN_UP,EGG_BTN_UP,EGG_BTN_DOWN,EGG_BTN_DOWN,
+        EGG_BTN_LEFT,EGG_BTN_RIGHT,EGG_BTN_LEFT,EGG_BTN_RIGHT,
+        EGG_BTN_WEST,EGG_BTN_SOUTH,EGG_BTN_WEST,EGG_BTN_SOUTH,
+      };
+      int srcp=g.cheatcodep,refp=0;
+      int i=CHEATCODE_LENGTH,ok=1;
+      for (;i-->0;srcp++,refp++) {
+        if (srcp>=CHEATCODE_LENGTH) srcp=0;
+        if (g.cheatcode[srcp]!=ref[refp]) {
+          ok=0;
+          break;
+        }
+      }
+      if (ok) {
+        kl_sound(RID_sound_cheat);
+        g.cheated^=1;
+      }
+    }
+  }
+}
+
 /* Update.
  */
  
@@ -263,6 +307,7 @@ void game_update(double elapsed) {
     pause_begin();
     return;
   }
+  cheatcode_update(elapsed);
   if (g.wintime<=0.0) { // Playclock stops the moment you deliver the sock. But we keep running for a little bit.
     g.playtime+=elapsed;
   }

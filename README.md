@@ -102,6 +102,6 @@ Starting 18 May and due 1 June 13:00. 1 June is a Monday, so be sure we're submi
 - - - Ceiling-dash on the bottom of a horizontal platform. ...I don't think this is possible in any case where dashing into the side wouldn't also work (and the side is much easier).
 - [x] Sound effects.
 - [x] Music.
-- [ ] Enter the Konami code at any time to change your hat.
+- [x] Enter the Konami code at any time to change your hat.
 - [x] Persist high score, and show at Hello.
-- [ ] Itch page.
+- [x] Itch page.

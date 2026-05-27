@@ -591,6 +591,7 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
   
   // Main body.
   uint8_t tileid=sprite->tileid; // (sprite->tileid) is constant. We choose the real tile dynamically, right here.
+  if (g.cheated) tileid+=7;
   if (SPRITE->ducking) {
     tileid+=0x01;
   } else if (SPRITE->wallsliding) {

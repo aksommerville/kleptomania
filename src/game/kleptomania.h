@@ -30,6 +30,8 @@
 #define MODAL_GAMEOVER 3
 #define MODAL_PAUSE 4
 
+#define CHEATCODE_LENGTH 12
+
 extern struct g {
 
   // res.c
@@ -57,6 +59,11 @@ extern struct g {
   double deathtime; // Counts up after dying.
   double playtime;
   double wintime; // If >0, counts down to gameover.
+  int cheated; // Nonzero if Dot's hat is changed.
+  
+  int cheatcode[CHEATCODE_LENGTH];
+  int cheatcodep;
+  double cheatcode_clock;
   
   // sprite.c
   struct sprite **spritev;

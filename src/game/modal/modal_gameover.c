@@ -1,9 +1,13 @@
 #include "game/kleptomania.h"
 
+#define JUMP_PERIOD 0.400
+#define JUMP_EXTRA 0.500 /* Randomly add up to this much to each still stage, to break the pattern. */
+
 static struct {
   int texid;
   int texw,texh;
   int is_hiscore;
+  double jumpclock[7];
 } gameover={0};
 
 /* Generate a line of the final report.
@@ -121,6 +125,11 @@ void gameover_begin() {
   g.modal=MODAL_GAMEOVER;
   egg_play_song(1,0,1,0.0,0.0);
   gameover_compose_report();
+  
+  double *v=gameover.jumpclock;
+  int i=7; for (;i-->0;v++) {
+    *v=((rand()&0xffff)*JUMP_PERIOD)/65535.0;
+  }
 }
 
 /* Update.
@@ -133,13 +142,57 @@ void gameover_update(double elapsed) {
     g.pvinput=g.input;
     hello_begin();
   }
+  double *v=gameover.jumpclock;
+  int i=7; for (;i-->0;v++) {
+    if (((*v)-=elapsed)<=0.0) (*v)+=JUMP_PERIOD+((rand()&0xffff)*JUMP_EXTRA)/65535.0;
+  }
 }
 
 /* Render.
  */
  
+static const struct villager {
+  uint8_t tileid_man;
+  uint8_t tileid_thing;
+  uint8_t xform;
+  int hat;
+} villagerv[]={
+  {0x98,0x90,0,0},
+  {0x99,0x91,0,0},
+  {0x9a,0x92,0,1},
+  {0x9b,0x93,0,0},
+  {0x9c,0x94,EGG_XFORM_XREV,0},
+  {0x9d,0,EGG_XFORM_XREV,0}, // Sara doesn't have a Thing tile; she's wearing the sock.
+  {0xd6,0,EGG_XFORM_XREV,0}, // And the vampire's watermelon is baked-in.
+};
+ 
 void gameover_render() {
+
   graf_fill_rect(&g.graf,0,0,FBW,FBH,0x000000ff);
+  graf_gradient_rect(&g.graf,0,90,FBW,FBH-20-90,0x000000ff,0x000000ff,0x97d8efff,0x97d8efff);
+  graf_fill_rect(&g.graf,0,FBH-20,FBW,20,0x008000ff);
+  graf_fill_rect(&g.graf,0,FBH-20,FBW,1,0x000000ff);
+  
   graf_set_input(&g.graf,gameover.texid);
-  graf_decal(&g.graf,(FBW>>1)-(gameover.texw>>1),(FBH>>1)-(gameover.texh>>1),0,0,gameover.texw,gameover.texh);
+  graf_decal(&g.graf,(FBW>>1)-(gameover.texw>>1),20,0,0,gameover.texw,gameover.texh);
+  
+  graf_set_image(&g.graf,RID_image_sprites);
+  const double *jump=gameover.jumpclock;
+  const struct villager *villager=villagerv;
+  int i=0; for (;i<7;i++,villager++,jump++) {
+    int x=(((i<<1)+1)*FBW)/14;
+    int y=FBH-28;
+    if (*jump<JUMP_PERIOD*0.5) y--;
+    graf_tile(&g.graf,x,y,villager->tileid_man,villager->xform);
+    if (villager->tileid_thing) {
+      int tx=x;
+      int ty=FBH-42;
+      if (villager->hat) {
+        ty=y-14; // sync to man
+      } else {
+        if (villager->xform) tx-=8; else tx+=8;
+      }
+      graf_tile(&g.graf,tx,ty,villager->tileid_thing,villager->xform);
+    }
+  }
 }

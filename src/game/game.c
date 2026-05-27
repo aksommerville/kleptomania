@@ -29,6 +29,12 @@ int game_reset() {
     g.treasurev[NS_treasure_avocado]=1;
     g.treasurev[NS_treasure_violin]=1;
     g.treasurev[NS_treasure_book]=1;
+    g.drawbridged=1;
+    // Stop here if you want to talk to the vampire.
+    g.treasurev[NS_treasure_key]=1;
+    g.treasurev[NS_treasure_watermelon]=1;
+    g.talked_to_vampire=1;
+    // Alas we can't tell Dot to spawn with the sock in hand, so you do need to travel a little.
   }
   
   return game_load_map(RID_map_start);

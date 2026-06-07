@@ -257,6 +257,7 @@ static void hero_update_dash(struct sprite *sprite,double elapsed) {
       kl_sound(RID_sound_dash_reject);
     } else {
       kl_sound(RID_sound_dash);
+      g.dashc++;
       SPRITE->dashing=1;
       SPRITE->dash_charged=0;
       SPRITE->dash_clock=DASH_TIME;
@@ -574,6 +575,7 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
       int shx=(int)(shadow->x*NS_sys_tilesize)+dx;
       int shy=(int)(shadow->y*NS_sys_tilesize)+dy;
       uint8_t tileid=sprite->tileid;
+      if (g.cheated) tileid+=7;
       if (shadow->ducking) tileid+=0x01;
       graf_tile(&g.graf,shx,shy,tileid,shadow->xform);
       graf_tile(&g.graf,shx,shy-NS_sys_tilesize,tileid-0x10,shadow->xform);

@@ -11,6 +11,7 @@ int game_reset() {
   g.talked_to_vampire=0;
   g.rung_bell=0;
   g.deathc=0;
+  g.dashc=0;
   g.deathtime=0.0;
   g.playtime=0.0;
   g.wintime=0.0;

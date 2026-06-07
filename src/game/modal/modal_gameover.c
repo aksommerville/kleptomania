@@ -95,7 +95,7 @@ static void gameover_compose_report() {
   gameover.is_hiscore=hiscore_check();
 
   gameover.texw=FBW;
-  gameover.texh=8*9;
+  gameover.texh=8*10;
 
   if (!gameover.texid) gameover.texid=egg_texture_new();
   egg_texture_load_raw(gameover.texid,gameover.texw,gameover.texh,gameover.texw<<2,0,0);
@@ -109,9 +109,10 @@ static void gameover_compose_report() {
   gameover_report_text(2,"has vanquished the horrible night.",-1);
   gameover_report_time(4,"Time",g.playtime);
   gameover_report_integer(5,"Death",g.deathc);
-  gameover_report_kv(6,"Bell",g.rung_bell?"Rung":"---",-1);
+  gameover_report_integer(6,"Dash",g.dashc);
+  gameover_report_kv(7,"Bell",g.rung_bell?"Rung":"---",-1);
   if (gameover.is_hiscore) {
-    gameover_report_text(8,"New high score!",-1);
+    gameover_report_text(9,"New high score!",-1);
   }
   
   graf_set_output(&g.graf,1);

@@ -12,5 +12,5 @@
 
 image image:bg
 position 1 -1 0 *
-sprite @7,3 sprite:platform (u8:dir)0x40 (u24)0
+sprite @8,3 sprite:platform (u8:dir)0x40 (u24)0
 sprite @3,7 sprite:torch (u32)0
